@@ -1,9 +1,9 @@
-const request = require('request');
+const request = require("request");
 
-export const token = process.env.FB_PAGE_ACCESS_TOKEN;
+const token = process.env.FB_PAGE_ACCESS_TOKEN;
 
 // sends text to the sender
-export const sendTextMessage = (sender, text) => {
+const sendTextMessage = (sender, text) => {
   const messageData = { text };
   request(
     {
@@ -12,8 +12,8 @@ export const sendTextMessage = (sender, text) => {
       method: 'POST',
       json: {
         recipient: { id: sender },
-        message: messageData,
-      },
+        message: messageData
+      }
     },
     (error, response) => {
       if (error) {
@@ -21,6 +21,9 @@ export const sendTextMessage = (sender, text) => {
       } else if (response.body.error) {
         console.log('Error: ', response.body.error);
       }
-    },
+    }
   );
 };
+
+exports.token = token;
+exports.sendTextMessage = sendTextMessage;
