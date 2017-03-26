@@ -1,0 +1,17 @@
+{
+  "name": "hotseat",
+  "version": "1.0.0",
+  "description": "",
+  "main": "src/app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.17.1",
+    "express": "^4.15.2",
+    "prettier": "^0.22.0",
+    "request": "^2.81.0"
+  }
+}
