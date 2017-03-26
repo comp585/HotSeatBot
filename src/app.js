@@ -33,10 +33,13 @@ app.listen(app.get("port"), function() {
   console.log("running on port", app.get("port"));
 });
 
+// webhook endpoint
 app.post("/webhook/", function(req, res) {
   let messaging_events = req.body.entry[0].messaging;
+
+  // iterate over the messages in batch
   for (let i = 0; i < messaging_events.length; i++) {
-    let event = req.body.entry[0].messaging[i];
+    let event = messaging_events[i];
     let sender = event.sender.id;
     if (event.message && event.message.text) {
       let text = event.message.text;
@@ -46,6 +49,7 @@ app.post("/webhook/", function(req, res) {
   res.sendStatus(200);
 });
 
+// sends text to the sender
 function sendTextMessage(sender, text) {
   let messageData = { text: text };
   request(
