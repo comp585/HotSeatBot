@@ -1,6 +1,9 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const sendTextMessage = require('./api').sendTextMessage;
+const api = require('./api');
+
+const sendMessage = api.sendMessage;
+const createTextMessage = api.createTextMessage;
 
 const app = express();
 
@@ -39,7 +42,9 @@ app.post('/webhook/', (req, res) => {
     const sender = event.sender.id;
     if (event.message && event.message.text) {
       const text = event.message.text;
-      sendTextMessage(sender, `Text received, echo: ${text.substring(0, 200)}`);
+      sendMessage(
+        createTextMessage(sender, `Text received, echo: ${text.substring(0, 200)}`)
+      );
     }
   });
   res.sendStatus(200);
