@@ -38,15 +38,17 @@ app.post('/webhook/', (req, res) => {
   const messagingEvents = req.body.entry[0].messaging;
 
   // iterate over the messages in batch
-  messagingEvents.forEach((event) => {
+  messagingEvents.forEach(event => {
     const sender = event.sender.id;
     if (event.message && event.message.text) {
       const text = event.message.text;
       sendMessage(
-        createTextMessage(sender, `Text received, echo: ${text.substring(0, 200)}`)
+        createTextMessage(
+          sender,
+          `Text received, echo: ${text.substring(0, 200)}`
+        )
       );
     }
   });
   res.sendStatus(200);
 });
-
