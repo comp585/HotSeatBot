@@ -1,8 +1,10 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const api = require('./api');
-const topics = require('../data/topics');
+const topics = require('../data/topics').getTopics();
+const getQuestions = require('../data/topics').getQuestions;
 const game = require('./db');
+const actions = require('./constants');
 
 const sendMessage = api.sendMessage;
 const createTextMessage = api.createTextMessage;
@@ -94,7 +96,28 @@ const receivedPostback = event => {
   const senderID = event.sender.id;
   const payload = event.postback.payload;
 
-  sendMessage(
-    createTextMessage(senderID, `Postback called with payload ${payload}`)
-  );
+  if (actions.isTopicSelection(payload)) {
+    const gameID = actions.getPayloadId(payload);
+    const topic = actions.getTopic(payload);
+    const questions = getQuestions(topic);
+    const question = api.getRandomQuestion(questions);
+
+    sendMessage(createTextMessage(senderID, `Question: ${question}`));
+    sendMessage(
+      createQuestion(senderID, 'Tell a truth or a lie?', [
+        {
+          text: 'Truth',
+          payload: actions.createPayload(actions.SET_TRUTH, gameID),
+        },
+        {
+          text: 'False',
+          payload: actions.createPayload(actions.SET_LIE, gameID),
+        },
+      ])
+    );
+  } else {
+    sendMessage(
+      createTextMessage(senderID, `Postback called with payload ${payload}`)
+    );
+  }
 };

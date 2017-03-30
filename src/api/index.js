@@ -87,6 +87,11 @@ const createQuickReply = (title, payload) => ({
   payload,
 });
 
+const getRandomQuestion = questions => {
+  const index = Math.floor(Math.random() * questions.length);
+  return questions[index];
+};
+
 module.exports = {
   token,
   sendMessage,
@@ -94,4 +99,5 @@ module.exports = {
   createPostback,
   createGeneric,
   createQuestion,
+  getRandomQuestion,
 };
