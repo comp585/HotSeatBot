@@ -97,6 +97,20 @@ const receivedReply = event => {
         { text: 'Done', payload: actions.createPayload(actions.DONE, gameID) },
       ])
     );
+  } else if (payload.startsWith(actions.DONE)) {
+    const gameID = actions.getPayloadId(payload);
+    sendMessage(
+      createQuestion(senderID, 'Investigator guess.', [
+        {
+          text: 'Truth',
+          payload: actions.createPayload(actions.SELECT_TRUTH, gameID),
+        },
+        {
+          text: 'False',
+          payload: actions.createPayload(actions.SELECT_LIE, gameID),
+        },
+      ])
+    );
   } else {
     sendMessage(
       createTextMessage(senderID, `Quick reply with payload ${payload}`)
