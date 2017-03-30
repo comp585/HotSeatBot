@@ -10,10 +10,10 @@ const newGame = () => {
 };
 
 const setAnswer = (id, answer) => {
-  state.id.answer = answer;
+  state[id].answer = answer;
 };
 
-const getAnswer = id => state.id.answer;
+const getAnswer = id => state[id].answer;
 
 module.exports = {
   newGame,
