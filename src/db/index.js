@@ -15,7 +15,12 @@ const setAnswer = (id, answer) => {
   }
 };
 
-const getAnswer = id => state[id].answer;
+const getAnswer = id => {
+  if (!state[id]) {
+    return undefined;
+  }
+  return state[id].answer;
+};
 
 module.exports = {
   newGame,

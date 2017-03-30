@@ -87,8 +87,7 @@ const receivedReply = event => {
   const senderID = event.sender.id;
   const payload = event.message.quick_reply.payload;
   if (
-    payload.startsWith(actions.SET_TRUTH) ||
-    payload.startsWith(actions.SET_LIE)
+    payload.startsWith(actions.SET_TRUTH) || payload.startsWith(actions.SET_LIE)
   ) {
     const gameID = actions.getPayloadId(payload);
     db.setAnswer(gameID, payload.startsWith(actions.SET_TRUTH));
@@ -111,6 +110,21 @@ const receivedReply = event => {
         },
       ])
     );
+  } else if (
+    payload.startsWith(actions.SELECT_TRUTH) ||
+    payload.startsWith(actions.SELECT_LIE)
+  ) {
+    const gameID = actions.getPayloadId(payload);
+    const answer = db.getAnswer(gameID);
+    if (answer === undefined) {
+      sendMessage(createTextMessage(senderID, 'Sorry, game data not found'));
+    } else {
+      const res = payload.startsWith(actions.SELECT_TRUTH);
+      const resMsg = res === answer
+        ? 'Investigator wins this round!'
+        : 'Teller wins this round!';
+      sendMessage(createTextMessage(senderID, resMsg));
+    }
   } else {
     sendMessage(
       createTextMessage(senderID, `Quick reply with payload ${payload}`)
