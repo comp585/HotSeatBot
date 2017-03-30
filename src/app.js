@@ -101,9 +101,8 @@ const receivedPostback = event => {
     const questions = getQuestions(topic);
     const question = api.getRandomQuestion(questions);
 
-    sendMessage(createTextMessage(senderID, `Question: ${question}`));
     sendMessage(
-      createQuestion(senderID, 'Tell a truth or a lie?', [
+      createQuestion(senderID, `Question: ${question}`, [
         {
           text: 'Truth',
           payload: actions.createPayload(actions.SET_TRUTH, gameID),
