@@ -27,7 +27,7 @@ const defaultOptions = {
 };
 const config = {
   default: {
-    patterns: ['src/**/*.js', 'data/**/*.js'],
+    patterns: ['src/**/*.js'],
     ignore: [
       '**/third_party/**',
       '**/node_modules/**',

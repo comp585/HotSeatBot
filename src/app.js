@@ -1,14 +1,13 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const api = require('./api');
-const topics = require('../data/topics').getTopics();
-const getQuestions = require('../data/topics').getQuestions;
 const game = require('./db');
+const topics = require('./db/topics').getTopics();
+const getQuestions = require('./db/topics').getQuestions;
 const actions = require('./constants');
 
 const sendMessage = api.sendMessage;
 const createTextMessage = api.createTextMessage;
-const createPostBack = api.createPostback;
 const createGeneric = api.createGeneric;
 const createQuestion = api.createQuestion;
 
