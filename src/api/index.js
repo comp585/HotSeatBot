@@ -53,7 +53,19 @@ const createPostback = (sender, title, buttons) =>
     buttons: buttons.map(createPostbackButton),
   });
 
+const createGeneric = (sender, topics) =>
+  wrapTemplate(sender, {
+    template_type: 'generic',
+    elements: topics.map(createElement),
+  });
+
+const createElement = topic => ({
+  title: topic.title,
+  buttons: createPostbackButton({ title: 'Choose', payload: topic.title }),
+});
+
 exports.token = token;
 exports.sendMessage = sendMessage;
 exports.createTextMessage = createTextMessage;
 exports.createPostback = createPostback;
+exports.createGeneric = createGeneric;

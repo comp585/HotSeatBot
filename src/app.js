@@ -1,10 +1,12 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const api = require('./api');
+const topics = require('../data/topics');
 
 const sendMessage = api.sendMessage;
 const createTextMessage = api.createTextMessage;
 const createPostBack = api.createPostback;
+const createGeneric = api.createGeneric;
 
 const app = express();
 
@@ -61,6 +63,10 @@ const receivedMessage = event => {
           { title: 'False', payload: 'False' },
         ];
         sendMessage(createPostBack(sender, 'Truth or Lie', buttons));
+        break;
+      }
+      case 'topics': {
+        sendMessage(createGeneric(sender, topics));
         break;
       }
       default: {
