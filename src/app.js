@@ -86,9 +86,22 @@ const receivedMessage = event => {
 const receivedReply = event => {
   const senderID = event.sender.id;
   const payload = event.message.quick_reply.payload;
-  sendMessage(
-    createTextMessage(senderID, `Quick reply with payload ${payload}`)
-  );
+  if (
+    payload.startsWith(actions.SET_TRUTH) ||
+    payload.startsWith(actions.SELECT_LIE)
+  ) {
+    const gameID = actions.getPayloadId(payload);
+    db.setAnswer(gameID, payload.startsWith(actions.SELECT_TRUTH));
+    sendMessage(
+      createQuestion(senderID, 'Teller answer the question.', [
+        { text: 'Done', payload: actions.createPayload(actions.DONE, gameID) },
+      ])
+    );
+  } else {
+    sendMessage(
+      createTextMessage(senderID, `Quick reply with payload ${payload}`)
+    );
+  }
 };
 
 const receivedPostback = event => {
@@ -111,17 +124,6 @@ const receivedPostback = event => {
           text: 'False',
           payload: actions.createPayload(actions.SET_LIE, gameID),
         },
-      ])
-    );
-  } else if (
-    payload.startsWith(actions.SET_TRUTH) ||
-    payload.startsWith(actions.SELECT_LIE)
-  ) {
-    const gameID = actions.getPayloadId(payload);
-    db.setAnswer(gameID, payload.startsWith(actions.SELECT_TRUTH));
-    sendMessage(
-      createQuestion(senderID, 'Teller answer the question.', [
-        { text: 'Done', payload: actions.createPayload(actions.DONE, gameID) },
       ])
     );
   } else {
