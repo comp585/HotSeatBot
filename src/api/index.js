@@ -1,5 +1,7 @@
 const request = require('request');
 
+const actions = require('../constants');
+
 const token = process.env.FB_PAGE_ACCESS_TOKEN;
 
 const createRecipient = sender => ({
@@ -53,15 +55,23 @@ const createPostback = (sender, title, buttons) =>
     buttons: buttons.map(createPostbackButton),
   });
 
-const createGeneric = (sender, topics) =>
+const createGeneric = (sender, topics, id) =>
   wrapTemplate(sender, {
     template_type: 'generic',
-    elements: topics.map(createElement),
+    elements: topics.map(topic => createElement(topic, id)),
   });
 
-const createElement = topic => ({
+const createElement = (topic, id) => ({
   title: topic.category,
-  buttons: [createPostbackButton({ title: 'Choose', payload: topic.category })],
+  buttons: [
+    createPostbackButton({
+      title: 'Choose',
+      payload: actions.createPayload(
+        actions.createTopicSelector(topic.category),
+        id
+      ),
+    }),
+  ],
 });
 
 const createQuestion = (sender, question, choices) =>

@@ -1,7 +1,12 @@
+const v4 = require('uuid/v4');
+
 const state = {};
 
-const newGame = id => {
-  state.id = {};
+const newGame = () => {
+  const id = v4();
+  state[id] = {};
+
+  return id;
 };
 
 const setAnswer = (id, answer) => {
