@@ -72,7 +72,7 @@ const receivedMessage = event => {
       }
       case 'question': {
         sendMessage(
-          createQuestion('Truth or lie?', [
+          createQuestion(sender, 'Truth or lie?', [
             { text: 'Truth', payload: 'Truth' },
             { text: 'Lie', payload: 'Lie' },
           ])

@@ -64,11 +64,12 @@ const createElement = topic => ({
   buttons: [createPostbackButton({ title: 'Choose', payload: topic.category })],
 });
 
-const createQuestion = (question, choices) => ({
-  text: question,
-  quick_replies: choices.map(choice =>
-    createQuickReply(choice.text, choice.payload)),
-});
+const createQuestion = (sender, question, choices) =>
+  wrapGenericMsg(sender, {
+    text: question,
+    quick_replies: choices.map(choice =>
+      createQuickReply(choice.text, choice.payload)),
+  });
 
 const createQuickReply = (title, payload) => ({
   content_type: 'text',
