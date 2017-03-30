@@ -61,7 +61,7 @@ const createGeneric = (sender, topics) =>
 
 const createElement = topic => ({
   title: topic.title,
-  buttons: createPostbackButton({ title: 'Choose', payload: topic.title }),
+  buttons: [createPostbackButton({ title: 'Choose', payload: topic.title })],
 });
 
 exports.token = token;
