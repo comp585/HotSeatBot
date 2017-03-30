@@ -24,7 +24,7 @@ const wrapGenericMsg = (sender, req) =>
 const wrapTemplate = (sender, req) =>
   wrapGenericMsg(sender, { attachment: { type: 'template', payload: req } });
 
-const sendMessage = (message) => {
+const sendMessage = message => {
   request(wrapRequest(message), (err, res) => {
     if (err) {
       console.log('Error sending messages: ', err);

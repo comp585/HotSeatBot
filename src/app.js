@@ -4,6 +4,7 @@ const api = require('./api');
 
 const sendMessage = api.sendMessage;
 const createTextMessage = api.createTextMessage;
+const createPostBack = api.createPostback;
 
 const app = express();
 
@@ -39,16 +40,49 @@ app.post('/webhook/', (req, res) => {
 
   // iterate over the messages in batch
   messagingEvents.forEach(event => {
-    const sender = event.sender.id;
-    if (event.message && event.message.text) {
-      const text = event.message.text;
-      sendMessage(
-        createTextMessage(
-          sender,
-          `Text received, echo: ${text.substring(0, 200)}`
-        )
-      );
+    if (event.message) {
+      receivedMessage(event);
+    } else if (event.postback) {
+      receivedPostback(event);
+    } else {
+      console.log(`Webhook received unknown messagingEvent: ${event}`);
     }
   });
   res.sendStatus(200);
 });
+
+const receivedMessage = event => {
+  const sender = event.sender.id;
+  if (event.message && event.message.text) {
+    switch (event.message.text.toLowerCase()) {
+      case 'start': {
+        const buttons = [
+          { title: 'Truth', payload: 'Truth' },
+          { title: 'False', payload: 'False' },
+        ];
+        sendMessage(createPostBack(sender, 'Truth or Lie', buttons));
+        break;
+      }
+      default: {
+        const text = event.message.text;
+        sendMessage(
+          createTextMessage(
+            sender,
+            `Text received, echo: ${text.substring(0, 200)}`,
+          ),
+        );
+      }
+    }
+  }
+};
+
+const receivedPostback = event => {
+  const senderID = event.sender.id;
+  const recipientID = event.recipient.id;
+  const timeOfPostback = event.timestamp;
+  const payload = event.postback.payload;
+
+  sendMessage(
+    createTextMessage(senderID, `Postback called with payload ${payload}`),
+  );
+};
