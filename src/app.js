@@ -44,7 +44,11 @@ app.post('/webhook/', (req, res) => {
   // iterate over the messages in batch
   messagingEvents.forEach(event => {
     if (event.message) {
-      receivedMessage(event);
+      if (event.message.quick_reply) {
+        receivedReply(event);
+      } else {
+        receivedMessage(event);
+      }
     } else if (event.postback) {
       receivedPostback(event);
     } else {
@@ -92,10 +96,16 @@ const receivedMessage = event => {
   }
 };
 
+const receivedReply = event => {
+  const senderID = event.sender.id;
+  const payload = event.message.quick_reply;
+  sendMessage(
+    createTextMessage(senderID, `Quick reply with payload ${payload}`)
+  );
+};
+
 const receivedPostback = event => {
   const senderID = event.sender.id;
-  const recipientID = event.recipient.id;
-  const timeOfPostback = event.timestamp;
   const payload = event.postback.payload;
 
   sendMessage(
