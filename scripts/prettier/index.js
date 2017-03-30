@@ -22,7 +22,7 @@ const prettierCmd = path.resolve(__dirname, '../../node_modules/.bin/' + prettie
 const defaultOptions = {
   'single-quote': 'true',
   'jsx-bracket-same-line': 'true',
-  'trailing-comma': 'all',
+  'trailing-comma': 'es5',
   'print-width': 80,
 };
 const config = {

@@ -68,8 +68,8 @@ const receivedMessage = event => {
         sendMessage(
           createTextMessage(
             sender,
-            `Text received, echo: ${text.substring(0, 200)}`,
-          ),
+            `Text received, echo: ${text.substring(0, 200)}`
+          )
         );
       }
     }
@@ -83,6 +83,6 @@ const receivedPostback = event => {
   const payload = event.postback.payload;
 
   sendMessage(
-    createTextMessage(senderID, `Postback called with payload ${payload}`),
+    createTextMessage(senderID, `Postback called with payload ${payload}`)
   );
 };
