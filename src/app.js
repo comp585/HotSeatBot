@@ -88,10 +88,10 @@ const receivedReply = event => {
   const payload = event.message.quick_reply.payload;
   if (
     payload.startsWith(actions.SET_TRUTH) ||
-    payload.startsWith(actions.SELECT_LIE)
+    payload.startsWith(actions.SET_LIE)
   ) {
     const gameID = actions.getPayloadId(payload);
-    db.setAnswer(gameID, payload.startsWith(actions.SELECT_TRUTH));
+    db.setAnswer(gameID, payload.startsWith(actions.SET_TRUTH));
     sendMessage(
       createQuestion(senderID, 'Teller answer the question.', [
         { text: 'Done', payload: actions.createPayload(actions.DONE, gameID) },
