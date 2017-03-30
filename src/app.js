@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const api = require('./api');
-const game = require('./db');
+const db = require('./db');
 const topics = require('./db/topics').getTopics();
 const getQuestions = require('./db/topics').getQuestions;
 const actions = require('./constants');
@@ -65,7 +65,7 @@ const receivedMessage = event => {
   if (event.message && event.message.text) {
     switch (event.message.text.toLowerCase()) {
       case 'start': {
-        const id = game.newGame();
+        const id = db.newGame();
         sendMessage(createTextMessage(sender, 'Choose a topic'));
         sendMessage(createGeneric(sender, topics, id));
         break;
@@ -112,6 +112,17 @@ const receivedPostback = event => {
           text: 'False',
           payload: actions.createPayload(actions.SET_LIE, gameID),
         },
+      ])
+    );
+  } else if (
+    payload.startsWith(actions.SET_TRUTH) ||
+    payload.startsWith(actions.SELECT_LIE)
+  ) {
+    const gameID = actions.getPayloadId(payload);
+    db.setAnswer(gameID, payload.startsWith(actions.SELECT_TRUTH));
+    sendMessage(
+      createQuestion(senderID, 'Teller answer the question.', [
+        { text: 'Done', payload: actions.createPayload(actions.DONE, gameID) },
       ])
     );
   } else {

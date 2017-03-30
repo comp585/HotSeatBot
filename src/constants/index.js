@@ -5,12 +5,14 @@ const SET_LIE = 'SET_LIE';
 const SELECT_TRUTH = 'SELECT_TRUTH';
 const SELECT_LIE = 'SELECT_LIE';
 const TOPIC = 'TOPIC';
+const DONE = 'DONE';
 
 module.exports = {
   SET_TRUTH,
   SET_LIE,
   SELECT_TRUTH,
   SELECT_LIE,
+  DONE,
 
   createPayload: (label, id) => label + del + id,
 
@@ -22,4 +24,9 @@ module.exports = {
   createTopicSelector: topic => TOPIC + del + topic,
 
   isTopicSelection: payload => payload.startsWith(TOPIC),
+
+  getSelector: payload => {
+    const index = payload.lastIndexOf('_');
+    return payload.slice(0, index);
+  },
 };
