@@ -77,9 +77,11 @@ const createQuickReply = (title, payload) => ({
   payload,
 });
 
-exports.token = token;
-exports.sendMessage = sendMessage;
-exports.createTextMessage = createTextMessage;
-exports.createPostback = createPostback;
-exports.createGeneric = createGeneric;
-exports.createQuestion = createQuestion;
+module.exports = {
+  token,
+  sendMessage,
+  createTextMessage,
+  createPostback,
+  createGeneric,
+  createQuestion,
+};
