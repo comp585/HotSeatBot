@@ -7,6 +7,7 @@ const sendMessage = api.sendMessage;
 const createTextMessage = api.createTextMessage;
 const createPostBack = api.createPostback;
 const createGeneric = api.createGeneric;
+const createQuestion = api.createQuestion;
 
 const app = express();
 
@@ -68,6 +69,14 @@ const receivedMessage = event => {
       case 'topics': {
         sendMessage(createGeneric(sender, topics));
         break;
+      }
+      case 'question': {
+        sendMessage(
+          createQuestion('Truth or lie?', [
+            { text: 'Truth', payload: 'Truth' },
+            { text: 'Lie', payload: 'Lie' },
+          ])
+        );
       }
       default: {
         const text = event.message.text;
