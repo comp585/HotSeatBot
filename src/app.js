@@ -98,7 +98,7 @@ const receivedMessage = event => {
 
 const receivedReply = event => {
   const senderID = event.sender.id;
-  const payload = event.message.quick_reply;
+  const payload = event.message.quick_reply.payload;
   sendMessage(
     createTextMessage(senderID, `Quick reply with payload ${payload}`)
   );
