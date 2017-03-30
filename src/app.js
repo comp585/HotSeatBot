@@ -77,6 +77,7 @@ const receivedMessage = event => {
             { text: 'Lie', payload: 'Lie' },
           ])
         );
+        break;
       }
       default: {
         const text = event.message.text;
