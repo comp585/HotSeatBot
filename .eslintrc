@@ -6,6 +6,7 @@
   "rules": {
     "no-console": "off",
     "comma-dangle": "off",
-    "no-use-before-define": "off"
+    "no-use-before-define": "off",
+    "arrow-parens": "off"
   }
 }
