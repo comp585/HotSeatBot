@@ -36,6 +36,18 @@ const sendMessage = message => {
   });
 };
 
+const sendMessageAsync = (message, doneFunc) => {
+  request(wrapRequest(message), (err, res) => {
+    if (err) {
+      console.log('Error sending messages: ', err);
+    } else if (res.body.error) {
+      console.log('Error: ', res.body.error);
+    } else {
+      doneFunc();
+    }
+  });
+};
+
 const createTextMessage = (sender, text) => {
   const messageData = { text };
 
@@ -100,4 +112,5 @@ module.exports = {
   createGeneric,
   createQuestion,
   getRandomQuestion,
+  sendMessageAsync,
 };

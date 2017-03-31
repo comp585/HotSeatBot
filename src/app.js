@@ -7,6 +7,7 @@ const getQuestions = require('./db/topics').getQuestions;
 const actions = require('./constants');
 
 const sendMessage = api.sendMessage;
+const sendMessageAsync = api.sendMessageAsync;
 const createTextMessage = api.createTextMessage;
 const createGeneric = api.createGeneric;
 const createQuestion = api.createQuestion;
@@ -66,8 +67,11 @@ const receivedMessage = event => {
     switch (event.message.text.toLowerCase()) {
       case 'start': {
         const id = db.newGame();
-        sendMessage(createTextMessage(sender, 'Choose a topic'));
-        sendMessage(createGeneric(sender, topics, id));
+        sendMessageAsync(createTextMessage(sender, 'Choose a topic'), () => {
+          sendMessage(createGeneric(sender, topics, id));
+        });
+        // sendMessage(createTextMessage(sender, 'Choose a topic'));
+        // sendMessage(createGeneric(sender, topics, id));
         break;
       }
       default: {
