@@ -1,6 +1,8 @@
 # Hotseat
 
-Facebook Messenger bot for playing a game of truth or lie.
+[![Build Status](https://travis-ci.org/comp585/HotSeatBot.svg?branch=master)](https://travis-ci.org/comp585/HotSeatBot)
+
+FaceBook Messenger bot for playing a game of truth or lie.
 
 ## Dev
 
