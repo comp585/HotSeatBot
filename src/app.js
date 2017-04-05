@@ -105,6 +105,7 @@ const receivedReply = event => {
         {
           text: 'Truth',
           payload: actions.createPayload(actions.SELECT_TRUTH, gameID),
+          image_url:"https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Green_check.svg/480px-Green_check.svg.png",
         },
         {
           text: 'False',
