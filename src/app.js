@@ -95,7 +95,7 @@ const receivedReply = event => {
     db.setAnswer(gameID, payload.startsWith(actions.SET_TRUTH));
     sendMessage(
       createQuestion(senderID, 'Teller answer the question.', [
-        { text: 'Done', payload: actions.createPayload(actions.DONE, gameID) },
+        { text: 'Done', payload: actions.createPayload(actions.DONE, gameID),image_url:'https://cdn.pixabay.com/photo/2014/04/02/10/58/chick-305108_960_720.png'},
       ])
     );
   } else if (payload.startsWith(actions.DONE)) {
@@ -105,11 +105,12 @@ const receivedReply = event => {
         {
           text: 'Truth',
           payload: actions.createPayload(actions.SELECT_TRUTH, gameID),
-          image_url:'https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Green_check.svg/480px-Green_check.svg.png',
+          image_url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Green_check.svg/480px-Green_check.svg.png',
         },
         {
           text: 'False',
           payload: actions.createPayload(actions.SELECT_LIE, gameID),
+          image_url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Red_X.svg/768px-Red_X.svg.png',
         },
       ])
     );
@@ -150,10 +151,12 @@ const receivedPostback = event => {
         {
           text: 'Truth',
           payload: actions.createPayload(actions.SET_TRUTH, gameID),
+          image_url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Green_check.svg/480px-Green_check.svg.png',
         },
         {
           text: 'False',
           payload: actions.createPayload(actions.SET_LIE, gameID),
+          image_url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Red_X.svg/768px-Red_X.svg.png',
         },
       ])
     );

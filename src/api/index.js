@@ -86,13 +86,14 @@ const createQuestion = (sender, question, choices) =>
   wrapGenericMsg(sender, {
     text: question,
     quick_replies: choices.map(choice =>
-      createQuickReply(choice.text, choice.payload)),
+      createQuickReply(choice.text, choice.payload, choice.image_url)),
   });
 
-const createQuickReply = (title, payload) => ({
+const createQuickReply = (title, payload, image_url) => ({
   content_type: 'text',
   title,
   payload,
+  image_url,
 });
 
 const getRandomQuestion = questions => {
