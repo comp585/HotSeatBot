@@ -88,7 +88,7 @@ const receivedPostback = event => {
   const payload = event.postback.payload;
 
   if (actions.isGetStartedPayload(payload)) {
-    controller.handleStart(senderID);
+    controller.handleStart(senderID, topics);
   } else if (actions.isTopicSelection(payload)) {
     controller.handleTopicSelect(senderID, payload);
   } else {
