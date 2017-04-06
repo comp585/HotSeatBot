@@ -94,4 +94,16 @@ module.exports = {
       ])
     );
   },
+
+  handleDefaultReply: (sender, payload) => {
+    sendMessage(
+      createTextMessage(sender, `Quick reply with payload ${payload}`)
+    );
+  },
+
+  handleDefaultPostback: (sender, payload) => {
+    sendMessage(
+      createTextMessage(sender, `Postback called with payload ${payload}`)
+    );
+  },
 };

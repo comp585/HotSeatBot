@@ -1,16 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const api = require('./api');
-const db = require('./db');
-const topics = require('./db/topics').getTopics();
-const getQuestions = require('./db/topics').getQuestions;
 const actions = require('./constants');
-
-const sendMessage = api.sendMessage;
-const sendMessages = api.sendMessages;
-const createTextMessage = api.createTextMessage;
-const createGeneric = api.createGeneric;
-const createQuestion = api.createQuestion;
+const controller = require('./controller');
 
 const app = express();
 
@@ -67,12 +58,7 @@ const receivedMessage = event => {
     switch (event.message.text.toLowerCase()) {
       default: {
         const text = event.message.text;
-        sendMessage(
-          createTextMessage(
-            sender,
-            `Text received, echo: ${text.substring(0, 200)}`
-          )
-        );
+        controller.handleDefaultMessage(sender, text);
       }
     }
   }
@@ -84,48 +70,16 @@ const receivedReply = event => {
   if (
     payload.startsWith(actions.SET_TRUTH) || payload.startsWith(actions.SET_LIE)
   ) {
-    const gameID = actions.getPayloadId(payload);
-    db.setAnswer(gameID, payload.startsWith(actions.SET_TRUTH));
-    sendMessage(
-      createQuestion(senderID, 'Teller answer the question.', [
-        { text: 'Done', payload: actions.createPayload(actions.DONE, gameID),image_url:'https://cdn.pixabay.com/photo/2014/04/02/10/58/chick-305108_960_720.png'},
-      ])
-    );
+    controller.handleChoiceSet(senderID, payload);
   } else if (payload.startsWith(actions.DONE)) {
-    const gameID = actions.getPayloadId(payload);
-    sendMessage(
-      createQuestion(senderID, 'Investigator guess.', [
-        {
-          text: 'Truth',
-          payload: actions.createPayload(actions.SELECT_TRUTH, gameID),
-          image_url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Green_check.svg/480px-Green_check.svg.png',
-        },
-        {
-          text: 'False',
-          payload: actions.createPayload(actions.SELECT_LIE, gameID),
-          image_url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Red_X.svg/768px-Red_X.svg.png',
-        },
-      ])
-    );
+    controller.handleConversationDone(senderID, payload);
   } else if (
     payload.startsWith(actions.SELECT_TRUTH) ||
     payload.startsWith(actions.SELECT_LIE)
   ) {
-    const gameID = actions.getPayloadId(payload);
-    const answer = db.getAnswer(gameID);
-    if (answer === undefined) {
-      sendMessage(createTextMessage(senderID, 'Sorry, game data not found'));
-    } else {
-      const res = payload.startsWith(actions.SELECT_TRUTH);
-      const resMsg = res === answer
-        ? 'Investigator wins this round!'
-        : 'Teller wins this round!';
-      sendMessage(createTextMessage(senderID, resMsg));
-    }
+    controller.handleChoiceSelection(senderID, payload);
   } else {
-    sendMessage(
-      createTextMessage(senderID, `Quick reply with payload ${payload}`)
-    );
+    controller.handleDefaultReply(senderID, payload);
   }
 };
 
@@ -134,33 +88,10 @@ const receivedPostback = event => {
   const payload = event.postback.payload;
 
   if (actions.isGetStartedPayload(payload)) {
-    const id = db.newGame();
-    sendMessages(
-      [createTextMessage(senderID, 'Choose a topic'), createGeneric(senderID, topics, id)]
-    );
+    controller.handleStart(senderID);
   } else if (actions.isTopicSelection(payload)) {
-    const gameID = actions.getPayloadId(payload);
-    const topic = actions.getTopic(payload);
-    const questions = getQuestions(topic);
-    const question = api.getRandomQuestion(questions);
-
-    sendMessage(
-      createQuestion(senderID, `Question: ${question}`, [
-        {
-          text: 'Truth',
-          payload: actions.createPayload(actions.SET_TRUTH, gameID),
-          image_url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Green_check.svg/480px-Green_check.svg.png',
-        },
-        {
-          text: 'False',
-          payload: actions.createPayload(actions.SET_LIE, gameID),
-          image_url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Red_X.svg/768px-Red_X.svg.png',
-        },
-      ])
-    );
+    controller.handleTopicSelect(senderID, payload);
   } else {
-    sendMessage(
-      createTextMessage(senderID, `Postback called with payload ${payload}`)
-    );
+    controller.handleDefaultPostback(senderID, payload);
   }
 };

@@ -89,11 +89,11 @@ const createQuestion = (sender, question, choices) =>
       createQuickReply(choice.text, choice.payload, choice.image_url)),
   });
 
-const createQuickReply = (title, payload, image_url) => ({
+const createQuickReply = (title, payload, imageUrl) => ({
   content_type: 'text',
   title,
   payload,
-  image_url,
+  image_url: imageUrl,
 });
 
 const getRandomQuestion = questions => {
@@ -109,5 +109,5 @@ module.exports = {
   createGeneric,
   createQuestion,
   getRandomQuestion,
-  sendMessages
+  sendMessages,
 };
