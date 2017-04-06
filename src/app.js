@@ -65,13 +65,6 @@ const receivedMessage = event => {
   const sender = event.sender.id;
   if (event.message && event.message.text) {
     switch (event.message.text.toLowerCase()) {
-      case 'start': {
-        const id = db.newGame();
-        sendMessages(
-          [createTextMessage(sender, 'Choose a topic'), createGeneric(sender, topics, id)]
-        );
-        break;
-      }
       default: {
         const text = event.message.text;
         sendMessage(
@@ -140,7 +133,12 @@ const receivedPostback = event => {
   const senderID = event.sender.id;
   const payload = event.postback.payload;
 
-  if (actions.isTopicSelection(payload)) {
+  if (actions.isGetStartedPayload(payload)) {
+    const id = db.newGame();
+    sendMessages(
+      [createTextMessage(sender, 'Choose a topic'), createGeneric(sender, topics, id)]
+    );
+  } else if (actions.isTopicSelection(payload)) {
     const gameID = actions.getPayloadId(payload);
     const topic = actions.getTopic(payload);
     const questions = getQuestions(topic);
