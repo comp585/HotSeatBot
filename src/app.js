@@ -136,7 +136,7 @@ const receivedPostback = event => {
   if (actions.isGetStartedPayload(payload)) {
     const id = db.newGame();
     sendMessages(
-      [createTextMessage(sender, 'Choose a topic'), createGeneric(sender, topics, id)]
+      [createTextMessage(senderID, 'Choose a topic'), createGeneric(senderID, topics, id)]
     );
   } else if (actions.isTopicSelection(payload)) {
     const gameID = actions.getPayloadId(payload);
