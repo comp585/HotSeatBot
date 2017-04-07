@@ -1,8 +1,10 @@
 const Promise = require('bluebird');
-const request = Promise.promisifyAll(require('request'));
+const request = Promise.promisify(require('request'), { multiArgs: true });
 const async = require('asyncawait/async');
 const aw = require('asyncawait/await');
 const dedent = require('dedent-js');
+
+Promise.promisifyAll(request, { multiArgs: true });
 
 const actions = require('../constants');
 
