@@ -6,8 +6,11 @@ const getQuestions = require('../db/topics').getQuestions;
 const sendMessage = api.sendMessage;
 const sendMessages = api.sendMessages;
 const createTextMessage = api.createTextMessage;
+const createGenericView = api.createGenericView;
 const createGeneric = api.createGeneric;
 const createQuestion = api.createQuestion;
+const createElementView = api.createElementView;
+const createPostbackButton = api.createPostbackButton;
 
 module.exports = {
   handleStart: (sender, topics) => {
@@ -33,6 +36,31 @@ module.exports = {
     const questions = getQuestions(topic);
     const question = api.getRandomQuestion(questions);
 
+    const answer = Math.random() > 0.5;
+    const msg = answer ? 'Tell the truth.' : 'Tell a lie';
+    db.setAnswer(gameID, answer);
+
+    sendMessage(
+      createGenericView(sender, [
+        createElementView(
+          'Directions',
+          'Swipe right to reveal answer.',
+          createPostbackButton({
+            title: 'Done',
+            payload: actions.createPayload(actions.CONFIRM_ANSWER, gameID),
+          })
+        ),
+        createElementView(
+          'Answer',
+          msg,
+          createPostbackButton({
+            title: 'Done',
+            payload: actions.createPayload(actions.CONFIRM_ANSWER, gameID),
+          })
+        ),
+      ])
+    );
+
     sendMessage(
       createQuestion(sender, `Question: ${question}`, [
         {
@@ -51,7 +79,6 @@ module.exports = {
 
   handleChoiceSet: (sender, payload) => {
     const gameID = actions.getPayloadId(payload);
-    db.setAnswer(gameID, payload.startsWith(actions.SET_TRUTH));
     sendMessage(
       createQuestion(sender, 'Teller answer the question.', [
         {

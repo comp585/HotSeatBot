@@ -1,6 +1,7 @@
 const del = '_';
 
 const GET_STARTED_PAYLOAD = 'GET_STARTED_PAYLOAD';
+const CONFIRM_ANSWER = 'CONFIRM_ANSWER';
 const SET_TRUTH = 'SET_TRUTH';
 const SET_LIE = 'SET_LIE';
 const SELECT_TRUTH = 'SELECT_TRUTH';
@@ -10,6 +11,7 @@ const DONE = 'DONE';
 
 module.exports = {
   GET_STARTED_PAYLOAD,
+  CONFIRM_ANSWER,
   SET_TRUTH,
   SET_LIE,
   SELECT_TRUTH,
@@ -24,6 +26,8 @@ module.exports = {
   getTopic: payload => payload.split(del)[1],
 
   createTopicSelector: topic => TOPIC + del + topic,
+
+  isConfirmAnswer: payload => payload.startsWith(CONFIRM_ANSWER),
 
   isGetStartedPayload: payload => payload.startsWith(GET_STARTED_PAYLOAD),
 

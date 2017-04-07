@@ -63,15 +63,20 @@ const createPostback = (sender, title, buttons) =>
     buttons: buttons.map(createPostbackButton),
   });
 
-const createGeneric = (sender, topics, id) =>
-  wrapTemplate(sender, {
-    template_type: 'generic',
-    elements: topics.map(topic => createElement(topic, id)),
-  });
+const createGenericView = (sender, elements) =>
+  wrapTemplate(sender, { template_type: 'generic', elements });
 
-const createElement = (topic, id) => ({
-  title: topic.category,
-  buttons: [
+const createGeneric = (sender, topics, id) =>
+  createGenericView(sender, topics.map(topic => createElement(topic, id)));
+
+const createElementView = (title, subtitle, buttons) => ({
+  title,
+  subtitle,
+  buttons,
+});
+
+const createElement = (topic, id) =>
+  createElementView(topic, '', [
     createPostbackButton({
       title: 'Choose',
       payload: actions.createPayload(
@@ -79,8 +84,7 @@ const createElement = (topic, id) => ({
         id
       ),
     }),
-  ],
-});
+  ]);
 
 const createQuestion = (sender, question, choices) =>
   wrapGenericMsg(sender, {
@@ -107,7 +111,10 @@ module.exports = {
   createTextMessage,
   createPostback,
   createGeneric,
+  createGenericView,
+  createElementView,
   createQuestion,
+  createPostbackButton,
   getRandomQuestion,
   sendMessages,
 };

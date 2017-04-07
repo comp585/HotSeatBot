@@ -68,9 +68,7 @@ const receivedMessage = event => {
 const receivedReply = event => {
   const senderID = event.sender.id;
   const payload = event.message.quick_reply.payload;
-  if (
-    payload.startsWith(actions.SET_TRUTH) || payload.startsWith(actions.SET_LIE)
-  ) {
+  if (actions.isConfirmAnswer(payload)) {
     controller.handleChoiceSet(senderID, payload);
   } else if (payload.startsWith(actions.DONE)) {
     controller.handleConversationDone(senderID, payload);
