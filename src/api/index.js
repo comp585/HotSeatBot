@@ -41,7 +41,7 @@ const sendMessage = message => {
 
 const sendMessages = async(messages => {
   for (let i = 0; i < messages.length; i += 1) {
-    aw(sendMessage(messages[i]));
+    aw(request(wrapRequest(messages[i])));
   }
 });
 
