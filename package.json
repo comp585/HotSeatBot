@@ -13,6 +13,7 @@
   "dependencies": {
     "asyncawait": "^1.0.6",
     "body-parser": "^1.17.1",
+    "dedent-js": "^1.0.1",
     "express": "^4.15.2",
     "prettier": "^0.22.0",
     "request": "^2.81.0",

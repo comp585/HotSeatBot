@@ -1,6 +1,7 @@
 const request = require('request');
 const async = require('asyncawait/async');
 const aw = require('asyncawait/await');
+const dedent = require('dedent-js');
 
 const actions = require('../constants');
 
@@ -108,13 +109,13 @@ const getRandomQuestion = questions => {
 const createRoundView = (sender, round, players) => {
   const tellerIndex = round % players.length;
   const teller = players[tellerIndex].name;
-  const investigators = players.filter(
-    (player, index) => index !== tellerIndex
-  );
+  const investigators = players
+    .filter((player, index) => index !== tellerIndex)
+    .map(player => player.name);
   const scoreMsg = players
     .map(player => `${player.name}: ${player.score}`)
     .join('\n');
-  const msg = `
+  const msg = dedent`
     Round ${round}
     Teller: ${teller}
     Investigator(s): ${investigators.join(', ')}
