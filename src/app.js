@@ -68,9 +68,7 @@ const receivedMessage = event => {
 const receivedReply = event => {
   const senderID = event.sender.id;
   const payload = event.message.quick_reply.payload;
-  if (actions.isConfirmAnswer(payload)) {
-    controller.handleChoiceSet(senderID, payload);
-  } else if (payload.startsWith(actions.DONE)) {
+  if (payload.startsWith(actions.DONE)) {
     controller.handleConversationDone(senderID, payload);
   } else if (
     payload.startsWith(actions.SELECT_TRUTH) ||
@@ -90,6 +88,8 @@ const receivedPostback = event => {
     controller.handleStart(senderID, topics);
   } else if (actions.isTopicSelection(payload)) {
     controller.handleTopicSelect(senderID, payload);
+  } else if (actions.isConfirmAnswer(payload)) {
+    controller.handleChoiceSet(senderID, payload);
   } else {
     controller.handleDefaultPostback(senderID, payload);
   }
