@@ -105,6 +105,25 @@ const getRandomQuestion = questions => {
   return questions[index];
 };
 
+const createRoundView = (sender, round, players) => {
+  const tellerIndex = round % players.length;
+  const teller = players[tellerIndex].name;
+  const investigators = players.filter(
+    (player, index) => index !== tellerIndex
+  );
+  const scoreMsg = players
+    .map(player => `${player.name}: ${player.score}`)
+    .join('\n');
+  const msg = `
+    Round ${round}
+    Teller: ${teller}
+    Investigator(s): ${investigators.join(', ')}
+    ${scoreMsg}
+    `;
+
+  return createTextMessage(sender, msg);
+};
+
 module.exports = {
   token,
   sendMessage,
@@ -115,6 +134,7 @@ module.exports = {
   createElementView,
   createQuestion,
   createPostbackButton,
+  createRoundView,
   getRandomQuestion,
   sendMessages,
 };

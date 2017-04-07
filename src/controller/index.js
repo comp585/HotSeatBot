@@ -11,11 +11,15 @@ const createGeneric = api.createGeneric;
 const createQuestion = api.createQuestion;
 const createElementView = api.createElementView;
 const createPostbackButton = api.createPostbackButton;
+const createRoundView = api.createRoundView;
 
 module.exports = {
   handleStart: (sender, topics) => {
     const id = db.newGame();
+    db.addPlayer(id, 'Player 1');
+    db.addPlayer(id, 'Player 2');
     sendMessages([
+      createRoundView(sender, db.getRound(id), db.getPlayers(id)),
       createTextMessage(sender, 'Choose a topic'),
       createGeneric(sender, topics, id),
     ]);
