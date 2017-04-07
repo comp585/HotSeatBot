@@ -86,7 +86,16 @@ module.exports = {
       const resMsg = res === answer
         ? 'Investigator wins this round!'
         : 'Teller wins this round!';
-      sendMessage(createTextMessage(sender, resMsg));
+      db.endRound(gameID, res);
+      sendMessages([
+        createTextMessage(sender, resMsg),
+        createQuestion(sender, 'Press to move to the next round.', [
+          {
+            text: 'Continue',
+            payload: actions.createPayload(actions.CONTINUE_GAME, gameID),
+          },
+        ]),
+      ]);
     }
   },
 
@@ -118,5 +127,14 @@ module.exports = {
     sendMessage(
       createTextMessage(sender, `Postback called with payload ${payload}`)
     );
+  },
+
+  handleContinue: (sender, topics, payload) => {
+    const id = actions.getPayloadId(payload);
+    sendMessages([
+      createRoundView(sender, db.getRound(id), db.getPlayers(id)),
+      createTextMessage(sender, 'Choose a topic'),
+      createGeneric(sender, topics, id),
+    ]);
   },
 };

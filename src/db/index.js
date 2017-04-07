@@ -35,12 +35,24 @@ const addPlayer = (id, name) => {
   }
 };
 
-const endRound = id => {
+const endRound = (id, answer) => {
   if (!state[id]) {
     return undefined;
   }
 
+  const correct = answer === state[id].answer;
+  const tellerIndex = state[id].round % state[id].players.length;
+
   state[id].round += 1;
+
+  for (let i = 0; i < state[id].players; i += 1) {
+    if (i === tellerIndex) {
+      state[id].players[i] += correct ? 0 : 1;
+    } else {
+      state[id].players[i] += correct ? 1 : 0;
+    }
+  }
+
   return state[id].players.filter(player => player.score >= playTo).length > 0;
 };
 

@@ -75,6 +75,8 @@ const receivedReply = event => {
     payload.startsWith(actions.SELECT_LIE)
   ) {
     controller.handleChoiceSelection(senderID, payload);
+  } else if (payload.startsWith(actions.CONTINUE_GAME)) {
+    controller.handleContinue(senderID, topics, payload);
   } else {
     controller.handleDefaultReply(senderID, payload);
   }

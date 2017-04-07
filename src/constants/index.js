@@ -8,6 +8,7 @@ const SELECT_TRUTH = 'SELECT_TRUTH';
 const SELECT_LIE = 'SELECT_LIE';
 const TOPIC = 'TOPIC';
 const DONE = 'DONE';
+const CONTINUE_GAME = 'CONTINUE_GAME';
 
 module.exports = {
   GET_STARTED_PAYLOAD,
@@ -17,6 +18,7 @@ module.exports = {
   SELECT_TRUTH,
   SELECT_LIE,
   DONE,
+  CONTINUE_GAME,
 
   createPayload: (label, id) => label + del + id,
 
@@ -32,6 +34,8 @@ module.exports = {
   isGetStartedPayload: payload => payload.startsWith(GET_STARTED_PAYLOAD),
 
   isTopicSelection: payload => payload.startsWith(TOPIC),
+
+  isContinueGame: payload => payload.startsWith(CONTINUE_GAME),
 
   getSelector: payload => {
     const index = payload.lastIndexOf('_');
