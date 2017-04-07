@@ -41,24 +41,20 @@ module.exports = {
     db.setAnswer(gameID, answer);
 
     sendMessages([
-      createTextMessage(`Question: ${question}`),
+      createTextMessage(sender, `Question: ${question}`),
       createGenericView(sender, [
-        createElementView(
-          'Directions',
-          'Swipe right to reveal answer.',
+        createElementView('Directions', 'Swipe right to reveal answer.', [
           createPostbackButton({
             title: 'Done',
             payload: actions.createPayload(actions.CONFIRM_ANSWER, gameID),
-          })
-        ),
-        createElementView(
-          'Answer',
-          msg,
+          }),
+        ]),
+        createElementView('Answer', msg, [
           createPostbackButton({
             title: 'Done',
             payload: actions.createPayload(actions.CONFIRM_ANSWER, gameID),
-          })
-        ),
+          }),
+        ]),
       ]),
     ]);
   },
