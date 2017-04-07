@@ -86,16 +86,26 @@ module.exports = {
       const resMsg = res === answer
         ? 'Investigator wins this round!'
         : 'Teller wins this round!';
-      db.endRound(gameID, res);
-      sendMessages([
-        createTextMessage(sender, resMsg),
-        createQuestion(sender, 'Press to move to the next round.', [
-          {
-            text: 'Continue',
-            payload: actions.createPayload(actions.CONTINUE_GAME, gameID),
-          },
-        ]),
-      ]);
+      const over = db.endRound(gameID, res) > 0;
+      if (over) {
+        const winners = db.getWinners(gameID);
+        sendMessage(
+          createTextMessage(
+            sender,
+            `Game Over: ${winners.join(', ')} win${winners.length > 1 ? '' : 's'}!`
+          )
+        );
+      } else {
+        sendMessages([
+          createTextMessage(sender, resMsg),
+          createQuestion(sender, 'Press to move to the next round.', [
+            {
+              text: 'Continue',
+              payload: actions.createPayload(actions.CONTINUE_GAME, gameID),
+            },
+          ]),
+        ]);
+      }
     }
   },
 

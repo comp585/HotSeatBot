@@ -56,6 +56,11 @@ const endRound = (id, answer) => {
   return state[id].players.filter(player => player.score >= playTo).length > 0;
 };
 
+const getWinners = id =>
+  state[id].players
+    .filter(player => player.score >= playTo)
+    .map(player => player.name);
+
 const getPlayers = id => {
   if (!state[id]) {
     return undefined;
@@ -76,6 +81,7 @@ module.exports = {
   setAnswer,
   getAnswer,
   getPlayers,
+  getWinners,
   getRound,
   addPlayer,
   endRound,
