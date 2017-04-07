@@ -45,7 +45,7 @@ const endRound = (id, answer) => {
 
   state[id].round += 1;
 
-  for (let i = 0; i < state[id].players; i += 1) {
+  for (let i = 0; i < state[id].players.length; i += 1) {
     if (i === tellerIndex) {
       state[id].players[i] += correct ? 0 : 1;
     } else {

@@ -116,9 +116,13 @@ const createRoundView = (sender, round, players) => {
     .map(player => `${player.name}: ${player.score}`)
     .join('\n');
   const msg = dedent`
-    Round ${round}
+    Round ${round + 1}
+    ------------------
+    Roles
     Teller: ${teller}
     Investigator(s): ${investigators.join(', ')}
+    ------------------
+    Scores
     ${scoreMsg}
     `;
 
