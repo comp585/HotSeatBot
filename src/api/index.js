@@ -76,7 +76,7 @@ const createElementView = (title, subtitle, buttons) => ({
 });
 
 const createElement = (topic, id) =>
-  createElementView(topic, '', [
+  createElementView(topic, 'Topic Explanation', [
     createPostbackButton({
       title: 'Choose',
       payload: actions.createPayload(
