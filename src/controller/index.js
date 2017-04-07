@@ -40,7 +40,8 @@ module.exports = {
     const msg = answer ? 'Tell the truth.' : 'Tell a lie';
     db.setAnswer(gameID, answer);
 
-    sendMessage(
+    sendMessages([
+      createTextMessage(`Question: ${question}`),
       createGenericView(sender, [
         createElementView(
           'Directions',
@@ -58,23 +59,8 @@ module.exports = {
             payload: actions.createPayload(actions.CONFIRM_ANSWER, gameID),
           })
         ),
-      ])
-    );
-
-    sendMessage(
-      createQuestion(sender, `Question: ${question}`, [
-        {
-          text: 'Truth',
-          payload: actions.createPayload(actions.SET_TRUTH, gameID),
-          image_url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Green_check.svg/480px-Green_check.svg.png',
-        },
-        {
-          text: 'False',
-          payload: actions.createPayload(actions.SET_LIE, gameID),
-          image_url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Red_X.svg/768px-Red_X.svg.png',
-        },
-      ])
-    );
+      ]),
+    ]);
   },
 
   handleChoiceSet: (sender, payload) => {
