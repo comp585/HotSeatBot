@@ -98,7 +98,7 @@ module.exports = {
             {
               text: 'New Game',
               payload: actions.createPayload(actions.NEW_GAME, gameID),
-            }, 
+            },
           ]),
         ]);
       } else {
