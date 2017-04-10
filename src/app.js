@@ -77,6 +77,8 @@ const receivedReply = event => {
     controller.handleChoiceSelection(senderID, payload);
   } else if (payload.startsWith(actions.CONTINUE_GAME)) {
     controller.handleContinue(senderID, topics, payload);
+  } else if (action.isNewGamePayload(payload)) {
+    controller.handleStart(senderID, topics);
   } else {
     controller.handleDefaultReply(senderID, payload);
   }
@@ -92,8 +94,6 @@ const receivedPostback = event => {
     controller.handleTopicSelect(senderID, payload);
   } else if (actions.isConfirmAnswer(payload)) {
     controller.handleChoiceSet(senderID, payload);
-  } else if (action.isNewGamePayload(payload)) {
-    controller.handleStart(senderID, topics);
   } else {
     controller.handleDefaultPostback(senderID, payload);
   }
