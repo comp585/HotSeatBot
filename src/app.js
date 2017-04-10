@@ -77,7 +77,7 @@ const receivedReply = event => {
     controller.handleChoiceSelection(senderID, payload);
   } else if (payload.startsWith(actions.CONTINUE_GAME)) {
     controller.handleContinue(senderID, topics, payload);
-  } else if (action.isNewGamePayload(payload)) {
+  } else if (actions.isNewGamePayload(payload)) {
     controller.handleStart(senderID, topics);
   } else {
     controller.handleDefaultReply(senderID, payload);
