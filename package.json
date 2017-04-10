@@ -12,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "asyncawait": "^1.0.6",
+    "bluebird": "^3.5.0",
     "body-parser": "^1.17.1",
     "dedent-js": "^1.0.1",
     "express": "^4.15.2",

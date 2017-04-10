@@ -1,7 +1,10 @@
-const request = require('request');
+const Promise = require('bluebird');
+const request = Promise.promisify(require('request'), { multiArgs: true });
 const async = require('asyncawait/async');
 const aw = require('asyncawait/await');
 const dedent = require('dedent-js');
+
+Promise.promisifyAll(request, { multiArgs: true });
 
 const actions = require('../constants');
 
@@ -29,8 +32,10 @@ const wrapGenericMsg = (sender, req) =>
 const wrapTemplate = (sender, req) =>
   wrapGenericMsg(sender, { attachment: { type: 'template', payload: req } });
 
+const createRequest = message => wrapRequest(message);
+
 const sendMessage = message => {
-  request(wrapRequest(message), (err, res) => {
+  request(createRequest(message), (err, res) => {
     if (err) {
       console.log('Error sending messages: ', err);
     } else if (res.body.error) {
@@ -41,7 +46,7 @@ const sendMessage = message => {
 
 const sendMessages = async(messages => {
   for (let i = 0; i < messages.length; i += 1) {
-    aw(request(wrapRequest(messages[i])));
+    aw(request(createRequest(messages[i])));
   }
 });
 
