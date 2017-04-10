@@ -89,12 +89,18 @@ module.exports = {
       const over = db.endRound(gameID, res) > 0;
       if (over) {
         const winners = db.getWinners(gameID);
-        sendMessage(
+        sendMessages([
           createTextMessage(
             sender,
             `Game Over: ${winners.join(', ')} win${winners.length > 1 ? '' : 's'}!`
-          )
-        );
+          ),
+          createQuestion(sender, 'Press New Game to play again!', [
+            {
+              text: 'New Game',
+              payload: actions.createPayload(actions.GET_STARTED_PAYLOAD, gameID),
+            }, 
+          ]),
+        ]);
       } else {
         sendMessages([
           createTextMessage(sender, resMsg),
