@@ -97,7 +97,7 @@ module.exports = {
           createQuestion(sender, 'Press New Game to play again!', [
             {
               text: 'New Game',
-              payload: actions.createPayload(actions.GET_STARTED_PAYLOAD, gameID),
+              payload: actions.createPayload(actions.NEW_GAME, gameID),
             }, 
           ]),
         ]);
