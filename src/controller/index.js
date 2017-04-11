@@ -34,6 +34,15 @@ module.exports = {
     );
   },
 
+  handleAddPlayer: (sender, payload) => {
+    sendMessage(
+      createTextMessage(
+        sender,
+        `Add player is not yet supported with payload: ${payload}`
+      )
+    );
+  },
+
   handleTopicSelect: (sender, payload) => {
     const gameID = actions.getPayloadId(payload);
     const topic = actions.getTopic(payload);

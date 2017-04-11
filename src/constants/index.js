@@ -10,6 +10,7 @@ const TOPIC = 'TOPIC';
 const DONE = 'DONE';
 const CONTINUE_GAME = 'CONTINUE_GAME';
 const NEW_GAME = 'NEW_GAME';
+const ADD_PLAYER_PAYLOAD = 'ADD_PLAYER_PAYLOAD';
 
 module.exports = {
   GET_STARTED_PAYLOAD,
@@ -21,6 +22,7 @@ module.exports = {
   DONE,
   CONTINUE_GAME,
   NEW_GAME,
+  ADD_PLAYER_PAYLOAD,
 
   createPayload: (label, id) => label + del + id,
 
@@ -40,6 +42,8 @@ module.exports = {
   isContinueGame: payload => payload.startsWith(CONTINUE_GAME),
 
   isNewGamePayload: payload => payload.startsWith(NEW_GAME),
+
+  isAddPlayerPayload: payload => payload.startsWith(ADD_PLAYER_PAYLOAD),
 
   getSelector: payload => {
     const index = payload.lastIndexOf('_');

@@ -94,6 +94,10 @@ const receivedPostback = event => {
     controller.handleTopicSelect(senderID, payload);
   } else if (actions.isConfirmAnswer(payload)) {
     controller.handleChoiceSet(senderID, payload);
+  } else if (actions.isNewGamePayload(payload)) {
+    controller.handleStart(senderID, topics);
+  } else if (actions.isAddPlayerPayload(payload)) {
+    controller.handleAddPlayer(senderID, payload);
   } else {
     controller.handleDefaultPostback(senderID, payload);
   }
