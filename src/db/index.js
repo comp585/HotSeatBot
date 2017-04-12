@@ -26,11 +26,12 @@ const getAnswer = id => {
   return state[id].answer;
 };
 
-const addPlayer = (id, name) => {
+const addPlayer = (id, name, emoji) => {
   if (state[id]) {
     state[id].players.push({
       name,
       score: 0,
+      emoji,
     });
   }
 };

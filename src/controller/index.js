@@ -2,6 +2,7 @@ const actions = require('../constants');
 const api = require('../api');
 const db = require('../db');
 const getQuestions = require('../db/topics').getQuestions;
+const getEmojis = require('../db/emojis').getRandomEmojis;
 
 const sendMessage = api.sendMessage;
 const sendMessages = api.sendMessages;
@@ -16,8 +17,11 @@ const createRoundView = api.createRoundView;
 module.exports = {
   handleStart: (sender, topics) => {
     const id = db.newGame();
-    db.addPlayer(id, 'Player 1');
-    db.addPlayer(id, 'Player 2');
+    const emojis = getEmojis(2);
+
+    db.addPlayer(id, emojis[0]);
+    db.addPlayer(id, emojis[1]);
+
     sendMessages([
       createRoundView(sender, db.getRound(id), db.getPlayers(id)),
       createTextMessage(sender, 'Choose a topic'),
