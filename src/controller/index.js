@@ -3,6 +3,7 @@ const api = require('../api');
 const db = require('../db');
 const getQuestions = require('../db/topics').getQuestions;
 const getEmojis = require('../db/emojis').getRandomEmojis;
+const createImageUrl = require('../utils').createImageUrl;
 
 const sendMessage = api.sendMessage;
 const sendMessages = api.sendMessages;
@@ -83,7 +84,7 @@ module.exports = {
         {
           text: 'Done',
           payload: actions.createPayload(actions.DONE, gameID),
-          image_url: 'https://cdn.pixabay.com/photo/2014/04/02/10/58/chick-305108_960_720.png',
+          image_url: createImageUrl('checkBlue.png'),
         },
       ])
     );
@@ -135,12 +136,12 @@ module.exports = {
         {
           text: 'Truth',
           payload: actions.createPayload(actions.SELECT_TRUTH, gameID),
-          image_url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/03/Green_check.svg/480px-Green_check.svg.png',
+          image_url: createImageUrl('check.png'),
         },
         {
           text: 'False',
           payload: actions.createPayload(actions.SELECT_LIE, gameID),
-          image_url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Red_X.svg/768px-Red_X.svg.png',
+          image_url: createImageUrl('x.png'),
         },
       ])
     );

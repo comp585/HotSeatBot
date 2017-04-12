@@ -6,7 +6,12 @@ const topics = require('./db/topics').getTopics();
 
 const app = express();
 
+const PUB_DIR = 'public';
+
 app.set('port', process.env.PORT || 5000);
+
+// serve static files from public directory
+app.use(express.static(PUB_DIR));
 
 // Process application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
