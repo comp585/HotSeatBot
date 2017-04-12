@@ -61,18 +61,17 @@ module.exports = {
     sendMessages([
       createTextMessage(sender, `Question: ${question}`),
       createGenericView(sender, [
-        createElementView('Directions', 'Swipe right to reveal answer.', [
-          createPostbackButton({
-            title: 'Done',
-            payload: actions.createPayload(actions.CONFIRM_ANSWER, gameID),
-          }),
-        ]),
-        createElementView('Answer', msg, [
-          createPostbackButton({
-            title: 'Done',
-            payload: actions.createPayload(actions.CONFIRM_ANSWER, gameID),
-          }),
-        ]),
+        createElementView(
+          'Directions',
+          'Teller: Swipe right to reveal answer.',
+          [
+            createPostbackButton({
+              title: 'Done',
+              payload: actions.createPayload(actions.CONFIRM_ANSWER, gameID),
+            }),
+          ]
+        ),
+        createElementView('Answer', msg),
       ]),
     ]);
   },
