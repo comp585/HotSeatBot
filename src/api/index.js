@@ -113,12 +113,12 @@ const getRandomQuestion = questions => {
 
 const createRoundView = (sender, round, players) => {
   const tellerIndex = round % players.length;
-  const teller = players[tellerIndex].name;
+  const teller = players[tellerIndex].emoji;
   const investigators = players
     .filter((player, index) => index !== tellerIndex)
-    .map(player => player.name);
+    .map(player => player.emoji);
   const scoreMsg = players
-    .map(player => `${player.name}: ${player.score}`)
+    .map(player => `${player.emoji}: ${player.score}`)
     .join('\n');
   const msg = dedent`
     Round ${round + 1}
