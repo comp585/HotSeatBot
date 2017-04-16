@@ -1,3 +1,6 @@
+const async = require('asyncawait/async');
+const aw = require('asyncawait/await');
+
 const actions = require('../constants');
 const api = require('../api');
 const db = require('../db');
@@ -16,19 +19,22 @@ const createPostbackButton = api.createPostbackButton;
 const createRoundView = api.createRoundView;
 
 module.exports = {
-  handleStart: (sender, topics) => {
-    const id = db.newGame();
+  handleStart: async((sender, topics) => {
+    const id = aw(db.newGame(sender));
     const emojis = getEmojis(2);
 
-    db.addPlayer(id, emojis[0]);
-    db.addPlayer(id, emojis[1]);
+    aw(db.addPlayer(sender, id, 'Player 1', emojis[0]));
+    aw(db.addPlayer(sender, id, 'Player 2', emojis[1]));
+
+    const round = aw(db.getRound(sender, id));
+    const players = aw(db.getPlayers(sender, id));
 
     sendMessages([
-      createRoundView(sender, db.getRound(id), db.getPlayers(id)),
+      createRoundView(sender, round, players),
       createTextMessage(sender, 'Choose a topic'),
       createGeneric(sender, topics, id),
     ]);
-  },
+  }),
 
   handleDefaultMessage: (sender, text) => {
     sendMessage(
@@ -48,7 +54,7 @@ module.exports = {
     );
   },
 
-  handleTopicSelect: (sender, payload) => {
+  handleTopicSelect: async((sender, payload) => {
     const gameID = actions.getPayloadId(payload);
     const topic = actions.getTopic(payload);
     const questions = getQuestions(topic);
@@ -56,7 +62,7 @@ module.exports = {
 
     const answer = Math.random() > 0.5;
     const msg = answer ? 'Tell the truth.' : 'Tell a lie';
-    db.setAnswer(gameID, answer);
+    aw(db.setAnswer(sender, gameID, answer));
 
     sendMessages([
       createTextMessage(sender, `Question: ${question}`),
@@ -74,7 +80,7 @@ module.exports = {
         createElementView('Answer', msg),
       ]),
     ]);
-  },
+  }),
 
   handleChoiceSet: (sender, payload) => {
     const gameID = actions.getPayloadId(payload);
@@ -89,9 +95,9 @@ module.exports = {
     );
   },
 
-  handleChoiceSelection: (sender, payload) => {
+  handleChoiceSelection: async((sender, payload) => {
     const gameID = actions.getPayloadId(payload);
-    const answer = db.getAnswer(gameID);
+    const answer = aw(db.getAnswer(sender, gameID));
     if (answer === undefined) {
       sendMessage(createTextMessage(sender, 'Sorry, game data not found'));
     } else {
@@ -99,9 +105,9 @@ module.exports = {
       const resMsg = res === answer
         ? 'Investigator wins this round!'
         : 'Teller wins this round!';
-      const over = db.endRound(gameID, res) > 0;
+      const over = aw(db.endRound(sender, gameID, res)) > 0;
       if (over) {
-        const winners = db.getWinners(gameID);
+        const winners = aw(db.getWinners(sender, gameID));
         sendMessages([
           createTextMessage(
             sender,
@@ -126,7 +132,7 @@ module.exports = {
         ]);
       }
     }
-  },
+  }),
 
   handleConversationDone: (sender, payload) => {
     const gameID = actions.getPayloadId(payload);
@@ -158,12 +164,14 @@ module.exports = {
     );
   },
 
-  handleContinue: (sender, topics, payload) => {
+  handleContinue: async((sender, topics, payload) => {
     const id = actions.getPayloadId(payload);
+    const round = aw(db.getRound(sender, id));
+    const players = aw(db.getPlayers(sender, id));
     sendMessages([
-      createRoundView(sender, db.getRound(id), db.getPlayers(id)),
+      createRoundView(sender, round, players),
       createTextMessage(sender, 'Choose a topic'),
       createGeneric(sender, topics, id),
     ]);
-  },
+  }),
 };
