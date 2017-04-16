@@ -1,5 +1,5 @@
 const async = require('asyncawait/async');
-const await = require('asyncawait/await');
+const asyncAwait = require('asyncawait/await');
 const dedent = require('dedent-js');
 
 const actions = require('../constants');
@@ -13,22 +13,35 @@ const sendMessage = api.sendMessage;
 const sendMessages = api.sendMessages;
 const createTextMessage = api.createTextMessage;
 const createGenericView = api.createGenericView;
-const createGeneric = api.createGeneric;
 const createQuestion = api.createQuestion;
 const createElementView = api.createElementView;
 const createPostbackButton = api.createPostbackButton;
 const createRoundView = api.createRoundView;
 
+const createTopicReply = (sender, teller, investigators, topics, id) =>
+  createQuestion(
+    sender,
+    dedent`${investigators.join(', ')}, choose a topic you want to learn more about ${teller}.`,
+    topics.map(topic => ({
+      text: topic.category,
+      payload: actions.createPayload(
+        actions.createTopicSelector(topic.category),
+        id
+      ),
+      image_url: topic.url,
+    }))
+  );
+
 module.exports = {
   handleStart: async((sender, topics) => {
-    const id = await(db.newGame(sender));
+    const id = asyncAwait(db.newGame(sender));
     const emojis = getEmojis(2);
 
-    await(db.addPlayer(sender, id, 'Player 1', emojis[0]));
-    await(db.addPlayer(sender, id, 'Player 2', emojis[1]));
+    asyncAwait(db.addPlayer(sender, id, 'Player 1', emojis[0]));
+    asyncAwait(db.addPlayer(sender, id, 'Player 2', emojis[1]));
 
-    const round = await(db.getRound(sender, id));
-    const players = await(db.getPlayers(sender, id));
+    const round = asyncAwait(db.getRound(sender, id));
+    const players = asyncAwait(db.getPlayers(sender, id));
     const tellerIndex = round % players.length;
     const teller = players[tellerIndex].emoji;
     const investigators = players
@@ -36,11 +49,7 @@ module.exports = {
       .map(player => player.emoji);
     sendMessages([
       createRoundView(sender, round, players),
-      createTextMessage(sender,
-        dedent`${investigators
-          .join(', ')}, choose a topic you want to learn more about ${teller}.`
-      ),
-      createGeneric(sender, topics, id),
+      createTopicReply(sender, teller, investigators, topics, id),
     ]);
   }),
 
@@ -70,7 +79,7 @@ module.exports = {
 
     const answer = Math.random() > 0.5;
     const msg = answer ? 'Tell the truth.' : 'Tell a lie';
-    await(db.setAnswer(sender, gameID, answer));
+    asyncAwait(db.setAnswer(sender, gameID, answer));
 
     sendMessages([
       createTextMessage(sender, `Question: ${question}`),
@@ -105,7 +114,7 @@ module.exports = {
 
   handleChoiceSelection: async((sender, payload) => {
     const gameID = actions.getPayloadId(payload);
-    const answer = await(db.getAnswer(sender, gameID));
+    const answer = asyncAwait(db.getAnswer(sender, gameID));
     if (answer === undefined) {
       sendMessage(createTextMessage(sender, 'Sorry, game data not found'));
     } else {
@@ -113,9 +122,9 @@ module.exports = {
       const resMsg = res === answer
         ? 'Investigator wins this round!'
         : 'Teller wins this round!';
-      const over = await(db.endRound(sender, gameID, res)) > 0;
+      const over = asyncAwait(db.endRound(sender, gameID, res)) > 0;
       if (over) {
-        const winners = await(db.getWinners(sender, gameID));
+        const winners = asyncAwait(db.getWinners(sender, gameID));
         sendMessages([
           createTextMessage(
             sender,
@@ -174,8 +183,8 @@ module.exports = {
 
   handleContinue: async((sender, topics, payload) => {
     const id = actions.getPayloadId(payload);
-    const round = await(db.getRound(sender, id));
-    const players = await(db.getPlayers(sender, id));
+    const round = asyncAwait(db.getRound(sender, id));
+    const players = asyncAwait(db.getPlayers(sender, id));
     const tellerIndex = round % players.length;
     const teller = players[tellerIndex].emoji;
     const investigators = players
@@ -183,11 +192,7 @@ module.exports = {
       .map(player => player.emoji);
     sendMessages([
       createRoundView(sender, round, players),
-      createTextMessage(sender,
-        dedent`${investigators
-          .join(', ')}, choose a topic you want to learn more about ${teller}.`
-      ),
-      createGeneric(sender, topics, id),
+      createTopicReply(sender, teller, investigators, topics, id),
     ]);
   }),
 };

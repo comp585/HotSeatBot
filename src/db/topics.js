@@ -1,21 +1,29 @@
+const createImageUrl = require('../utils').createImageUrl;
+
 const topics = [
   {
     category: 'Adventure',
+    url: createImageUrl('airplane.png'),
   },
   {
     category: 'Family & Upbringing',
+    url: createImageUrl('family.png'),
   },
   {
     category: 'Food',
+    url: createImageUrl('food.png'),
   },
   {
     category: 'Hypotheticals',
+    url: createImageUrl('thought_bubble.png'),
   },
   {
     category: 'Personals',
+    url: createImageUrl('personal.png'),
   },
   {
     category: 'Sex/Sexuality',
+    url: createImageUrl('devil.png'),
   },
 ];
 

@@ -109,10 +109,10 @@ const getPlayers = (sender, id) =>
     });
 
 const getWinners = (sender, id) =>
-  getPlayers(sender, id)
-    .then(players => players)
-    .filter(player => player.score >= playTo)
-    .map(player => player.name);
+  getPlayers(sender, id).then(players =>
+    players
+      .filter(player => player.score >= playTo)
+      .map(player => player.emoji));
 
 const getRound = (sender, id) =>
   db

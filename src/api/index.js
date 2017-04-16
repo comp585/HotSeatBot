@@ -1,7 +1,7 @@
 const Promise = require('bluebird');
 const request = Promise.promisify(require('request'), { multiArgs: true });
 const async = require('asyncawait/async');
-const await = require('asyncawait/await');
+const asyncAwait = require('asyncawait/await');
 const dedent = require('dedent-js');
 
 Promise.promisifyAll(request, { multiArgs: true });
@@ -46,7 +46,7 @@ const sendMessage = message => {
 
 const sendMessages = async(messages => {
   for (let i = 0; i < messages.length; i += 1) {
-    await(request(createRequest(messages[i])));
+    asyncAwait(request(createRequest(messages[i])));
   }
 });
 
