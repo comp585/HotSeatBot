@@ -1,5 +1,6 @@
 const async = require('asyncawait/async');
 const await = require('asyncawait/await');
+const dedent = require('dedent-js');
 
 const actions = require('../constants');
 const api = require('../api');
@@ -28,10 +29,17 @@ module.exports = {
 
     const round = await(db.getRound(sender, id));
     const players = await(db.getPlayers(sender, id));
-
+    const tellerIndex = round % players.length;
+    const teller = players[tellerIndex].emoji;
+    const investigators = players
+      .filter((player, index) => index !== tellerIndex)
+      .map(player => player.emoji);
     sendMessages([
       createRoundView(sender, round, players),
-      createTextMessage(sender, 'Choose a topic'),
+      createTextMessage(sender,
+        dedent`${investigators
+          .join(', ')}, choose a topic you want to learn more about ${teller}.`
+      ),
       createGeneric(sender, topics, id),
     ]);
   }),
@@ -168,9 +176,17 @@ module.exports = {
     const id = actions.getPayloadId(payload);
     const round = await(db.getRound(sender, id));
     const players = await(db.getPlayers(sender, id));
+    const tellerIndex = round % players.length;
+    const teller = players[tellerIndex].emoji;
+    const investigators = players
+      .filter((player, index) => index !== tellerIndex)
+      .map(player => player.emoji);
     sendMessages([
       createRoundView(sender, round, players),
-      createTextMessage(sender, 'Choose a topic'),
+      createTextMessage(sender,
+        dedent`${investigators
+          .join(', ')}, choose a topic you want to learn more about ${teller}.`
+      ),
       createGeneric(sender, topics, id),
     ]);
   }),
