@@ -9,5 +9,8 @@
     "no-use-before-define": "off",
     "arrow-parens": "off",
     "linebreak-style": "off"
+  },
+  "parserOptions": {
+    "sourceType": "script"
   }
 }

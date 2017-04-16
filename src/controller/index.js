@@ -1,5 +1,5 @@
 const async = require('asyncawait/async');
-const aw = require('asyncawait/await');
+const await = require('asyncawait/await');
 
 const actions = require('../constants');
 const api = require('../api');
@@ -20,14 +20,14 @@ const createRoundView = api.createRoundView;
 
 module.exports = {
   handleStart: async((sender, topics) => {
-    const id = aw(db.newGame(sender));
+    const id = await(db.newGame(sender));
     const emojis = getEmojis(2);
 
-    aw(db.addPlayer(sender, id, 'Player 1', emojis[0]));
-    aw(db.addPlayer(sender, id, 'Player 2', emojis[1]));
+    await(db.addPlayer(sender, id, 'Player 1', emojis[0]));
+    await(db.addPlayer(sender, id, 'Player 2', emojis[1]));
 
-    const round = aw(db.getRound(sender, id));
-    const players = aw(db.getPlayers(sender, id));
+    const round = await(db.getRound(sender, id));
+    const players = await(db.getPlayers(sender, id));
 
     sendMessages([
       createRoundView(sender, round, players),
@@ -62,7 +62,7 @@ module.exports = {
 
     const answer = Math.random() > 0.5;
     const msg = answer ? 'Tell the truth.' : 'Tell a lie';
-    aw(db.setAnswer(sender, gameID, answer));
+    await(db.setAnswer(sender, gameID, answer));
 
     sendMessages([
       createTextMessage(sender, `Question: ${question}`),
@@ -97,7 +97,7 @@ module.exports = {
 
   handleChoiceSelection: async((sender, payload) => {
     const gameID = actions.getPayloadId(payload);
-    const answer = aw(db.getAnswer(sender, gameID));
+    const answer = await(db.getAnswer(sender, gameID));
     if (answer === undefined) {
       sendMessage(createTextMessage(sender, 'Sorry, game data not found'));
     } else {
@@ -105,9 +105,9 @@ module.exports = {
       const resMsg = res === answer
         ? 'Investigator wins this round!'
         : 'Teller wins this round!';
-      const over = aw(db.endRound(sender, gameID, res)) > 0;
+      const over = await(db.endRound(sender, gameID, res)) > 0;
       if (over) {
-        const winners = aw(db.getWinners(sender, gameID));
+        const winners = await(db.getWinners(sender, gameID));
         sendMessages([
           createTextMessage(
             sender,
@@ -166,8 +166,8 @@ module.exports = {
 
   handleContinue: async((sender, topics, payload) => {
     const id = actions.getPayloadId(payload);
-    const round = aw(db.getRound(sender, id));
-    const players = aw(db.getPlayers(sender, id));
+    const round = await(db.getRound(sender, id));
+    const players = await(db.getPlayers(sender, id));
     sendMessages([
       createRoundView(sender, round, players),
       createTextMessage(sender, 'Choose a topic'),
