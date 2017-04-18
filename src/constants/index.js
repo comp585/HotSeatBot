@@ -11,6 +11,7 @@ const DONE = 'DONE';
 const CONTINUE_GAME = 'CONTINUE_GAME';
 const NEW_GAME = 'NEW_GAME';
 const ADD_PLAYER_PAYLOAD = 'ADD_PLAYER_PAYLOAD';
+const SET_PLAYER_COUNT = 'SET_PLAYER_COUNT';
 
 module.exports = {
   GET_STARTED_PAYLOAD,
@@ -23,6 +24,7 @@ module.exports = {
   CONTINUE_GAME,
   NEW_GAME,
   ADD_PLAYER_PAYLOAD,
+  SET_PLAYER_COUNT,
 
   createPayload: (label, id) => label + del + id,
 
@@ -44,6 +46,10 @@ module.exports = {
   isNewGamePayload: payload => payload.startsWith(NEW_GAME),
 
   isAddPlayerPayload: payload => payload.startsWith(ADD_PLAYER_PAYLOAD),
+
+  isSetPlayerCount: payload => payload.startsWith(SET_PLAYER_COUNT),
+
+  getPlayerCount: payload => payload.split(del)[1],
 
   getSelector: payload => {
     const index = payload.lastIndexOf('_');

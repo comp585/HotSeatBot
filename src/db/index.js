@@ -23,6 +23,7 @@ const newGame = sender => {
   const id = v4();
   const game = {
     round: 0,
+    currCount: 0,
   };
   return updateGame(sender, id, game);
 };
@@ -31,6 +32,24 @@ const setAnswer = (sender, id, answer) =>
   db
     .ref(`users/${sender}/games/${id}`)
     .update({ answer })
+    .then(val => val)
+    .catch(err => {
+      throw new Error(`Write error: ${err}`);
+    });
+
+const setPlayerCount = (sender, id, count) =>
+  db
+    .ref(`users/${sender}/games/${id}`)
+    .update({ count })
+    .then(val => val)
+    .catch(err => {
+      throw new Error(`Write error: ${err}`);
+    });
+
+const setCurrentCount = (sender, id, count) =>
+  db
+    .ref(`users/${sender}/games/${id}`)
+    .update({ currCount })
     .then(val => val)
     .catch(err => {
       throw new Error(`Write error: ${err}`);
@@ -123,13 +142,30 @@ const getRound = (sender, id) =>
       throw new Error(`Read error: ${err}`);
     });
 
+const getCount = (sender, id) =>
+  db
+    .ref(`users/${sender}/games/${id}`)
+    .once('value')
+    .then(snapshot => snapshot.val().currCount)
+    .catch(err => {
+      throw new Error(`Read error: ${err}`);
+    });
+
+const updateCount = (sender, id) =>
+  getCount(sender, id)
+    .then(count => setCurrentCount(sender, id, count + 1))
+    .then(val => val);
+
 module.exports = {
   newGame,
   setAnswer,
+  setPlayerCount,
   getAnswer,
   getPlayers,
   getWinners,
   getRound,
+  getCount,
   addPlayer,
   endRound,
+  updateCount,
 };

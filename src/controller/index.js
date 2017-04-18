@@ -62,6 +62,11 @@ module.exports = {
     );
   },
 
+  handlePlayerSet: async((sender, payload) => {
+    const id = asyncAwait(db.newGame(sender));
+    const playerCount = actions.getPlayerCount(payload);
+  }),
+
   handleAddPlayer: (sender, payload) => {
     sendMessage(
       createTextMessage(
