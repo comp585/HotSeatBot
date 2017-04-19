@@ -13,10 +13,7 @@ const getTopics = require('../db/topics').getTopics;
 const sendMessage = api.sendMessage;
 const sendMessages = api.sendMessages;
 const createTextMessage = api.createTextMessage;
-const createGenericView = api.createGenericView;
 const createQuestion = api.createQuestion;
-const createElementView = api.createElementView;
-const createPostbackButton = api.createPostbackButton;
 const createRoundView = api.createRoundView;
 
 const createTopicReply = (sender, teller, investigators, topics, id) =>
@@ -123,18 +120,16 @@ module.exports = {
 
     sendMessages([
       createTextMessage(sender, `Question: ${question}`),
-      createGenericView(sender, [
-        createElementView(
-          'Directions',
-          'Teller: Swipe right to reveal answer.',
-          [
-            createPostbackButton({
-              title: 'Done',
-              payload: actions.createPayload(actions.CONFIRM_ANSWER, gameID),
-            }),
-          ]
-        ),
-        createElementView('Answer', msg),
+      createQuestion(sender, 'Press Hide to continue!', [
+        {
+          text: 'Hide',
+          payload: actions.createPayload(actions.CONFIRM_ANSWER, gameID),
+          image_url: createImageUrl('zipper-mouth-face.png')
+        },
+        {
+          text: msg,
+          payload: actions.createPayload(actions.CONFIRM_ANSWER, gameID),
+        }
       ]),
     ]);
   }),
