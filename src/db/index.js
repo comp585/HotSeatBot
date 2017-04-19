@@ -28,32 +28,31 @@ const newGame = sender => {
   return updateGame(sender, id, game);
 };
 
+const set = (uri, field, value) => {
+  const state = {};
+  state[field] = value;
+  return db.ref(uri).update(state).then(val => val).catch(err => {
+    throw new Error(`Write error: ${err}`);
+  });
+};
+
+const read = (uri, field) =>
+  db
+    .ref(uri)
+    .once('value')
+    .then(snapshot => snapshot.val()[field])
+    .catch(err => {
+      throw new Error(`Read error: ${err}`);
+    });
+
+const setGameState = (sender, id, field, val) =>
+  set(`users/${sender}/games/${id}`, field, val);
+
+const readGameState = (sender, id, field) =>
+  read(`users/${sender}/games/${id}`, field);
+
 const setAnswer = (sender, id, answer) =>
-  db
-    .ref(`users/${sender}/games/${id}`)
-    .update({ answer })
-    .then(val => val)
-    .catch(err => {
-      throw new Error(`Write error: ${err}`);
-    });
-
-const setPlayerCount = (sender, id, count) =>
-  db
-    .ref(`users/${sender}/games/${id}`)
-    .update({ count })
-    .then(val => val)
-    .catch(err => {
-      throw new Error(`Write error: ${err}`);
-    });
-
-const setCurrentCount = (sender, id, count) =>
-  db
-    .ref(`users/${sender}/games/${id}`)
-    .update({ currCount: count })
-    .then(val => val)
-    .catch(err => {
-      throw new Error(`Write error: ${err}`);
-    });
+  setGameState(sender, id, 'answer', answer);
 
 const getGame = (sender, id) =>
   db
@@ -64,14 +63,7 @@ const getGame = (sender, id) =>
       throw new Error(`Read error: ${err}`);
     });
 
-const getAnswer = (sender, id) =>
-  db
-    .ref(`users/${sender}/games/${id}`)
-    .once('value')
-    .then(snapshot => snapshot.val().answer)
-    .catch(err => {
-      throw new Error(`Read error: ${err}`);
-    });
+const getAnswer = (sender, id) => readGameState(sender, id, 'answer');
 
 const addPlayer = (sender, id, name, emoji) => {
   const ref = db.ref(`users/${sender}/games/${id}/players`).push();
@@ -118,14 +110,7 @@ const endRound = (sender, id, answer) => {
 const toArray = obj => Object.keys(obj).map(key => obj[key]);
 
 const getPlayers = (sender, id) =>
-  db
-    .ref(`users/${sender}/games/${id}`)
-    .orderByKey()
-    .once('value')
-    .then(snapshot => toArray(snapshot.val().players))
-    .catch(err => {
-      throw new Error(`Read error: ${err}`);
-    });
+  readGameState(sender, id, 'players').then(players => toArray(players));
 
 const getWinners = (sender, id) =>
   getPlayers(sender, id).then(players =>
@@ -133,32 +118,17 @@ const getWinners = (sender, id) =>
       .filter(player => player.score >= playTo)
       .map(player => player.emoji));
 
-const getRound = (sender, id) =>
-  db
-    .ref(`users/${sender}/games/${id}`)
-    .once('value')
-    .then(snapshot => snapshot.val().round)
-    .catch(err => {
-      throw new Error(`Read error: ${err}`);
-    });
+const getRound = (sender, id) => readGameState(sender, id, 'round');
 
-const getCount = (sender, id) =>
-  db
-    .ref(`users/${sender}/games/${id}`)
-    .once('value')
-    .then(snapshot => snapshot.val().currCount)
-    .catch(err => {
-      throw new Error(`Read error: ${err}`);
-    });
+const getPlayerCount = (sender, id) => readGameState(sender, id, 'count');
 
-const getPlayerCount = (sender, id) =>
-  db
-    .ref(`users/${sender}/games/${id}`)
-    .once('value')
-    .then(snapshot => snapshot.val().count)
-    .catch(err => {
-      throw new Error(`Read error: ${err}`);
-    });
+const setPlayerCount = (sender, id, count) =>
+  setGameState(sender, id, 'count', count);
+
+const getCount = (sender, id) => readGameState(sender, id, 'currCount');
+
+const setCurrentCount = (sender, id, count) =>
+  setGameState(sender, id, 'currCount', count);
 
 const updateCount = (sender, id) =>
   getCount(sender, id)
