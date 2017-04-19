@@ -48,6 +48,16 @@ const handleGameStart = async((sender, payload, topics) => {
   ]);
 });
 
+const createPieceSelection = (sender, id, currCount) =>
+  createQuestion(
+    sender,
+    `Player ${currCount}: Choose a game piece.`,
+    Object.keys(emojis).map(emoji => ({
+      text: emojis[emoji],
+      payload: actions.createPayload(actions.createPieceSelector(emoji), id),
+    }))
+  );
+
 module.exports = {
   handleStart: async(sender => {
     const id = asyncAwait(db.newGame(sender));
@@ -82,19 +92,7 @@ module.exports = {
     const currCount = 0;
     asyncAwait(db.setPlayerCount(sender, id, playerCount));
 
-    sendMessage(
-      createQuestion(
-        sender,
-        `Player ${currCount + 1}: Choose a game piece.`,
-        Object.keys(emojis).map(piece => ({
-          text: emojis[piece],
-          payload: actions.createPayload(
-            actions.createPieceSelector(piece),
-            id
-          ),
-        }))
-      )
-    );
+    sendMessage(createPieceSelection(sender, id, currCount));
   }),
 
   handleAddPlayer: async((sender, payload) => {
@@ -107,19 +105,7 @@ module.exports = {
     asyncAwait(db.updateCount(sender, id));
 
     if (currCount < playerCount) {
-      sendMessage(
-        createQuestion(
-          sender,
-          `Player ${currCount}: Choose a game piece.`,
-          Object.keys(emojis).map(emoji => ({
-            text: emojis[emoji],
-            payload: actions.createPayload(
-              actions.createPieceSelector(piece),
-              id
-            ),
-          }))
-        )
-      );
+      sendMessage(createPieceSelection(sender, id, currCount));
     } else {
       handleGameStart(sender, payload, getTopics());
     }
