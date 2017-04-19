@@ -86,6 +86,10 @@ const receivedReply = event => {
     controller.handleContinue(senderID, topics, payload);
   } else if (actions.isNewGamePayload(payload)) {
     controller.handleStart(senderID, topics);
+  } else if (actions.isCountSelector(payload)) {
+    controller.handlePlayerCountSet(senderID, payload);
+  } else if (actions.isPieceSelection(payload)) {
+    controller.handleAddPlayer(senderID, payload);
   } else {
     controller.handleDefaultReply(senderID, payload);
   }
@@ -96,13 +100,11 @@ const receivedPostback = event => {
   const payload = event.postback.payload;
 
   if (actions.isGetStartedPayload(payload)) {
-    controller.handleStart(senderID, topics);
+    controller.handleStart(senderID);
   } else if (actions.isConfirmAnswer(payload)) {
     controller.handleChoiceSet(senderID, payload);
   } else if (actions.isNewGamePayload(payload)) {
     controller.handleStart(senderID, topics);
-  } else if (actions.isAddPlayerPayload(payload)) {
-    controller.handleAddPlayer(senderID, payload);
   } else {
     controller.handleDefaultPostback(senderID, payload);
   }

@@ -49,7 +49,7 @@ const setPlayerCount = (sender, id, count) =>
 const setCurrentCount = (sender, id, count) =>
   db
     .ref(`users/${sender}/games/${id}`)
-    .update({ currCount })
+    .update({ currCount: count })
     .then(val => val)
     .catch(err => {
       throw new Error(`Write error: ${err}`);
@@ -151,6 +151,15 @@ const getCount = (sender, id) =>
       throw new Error(`Read error: ${err}`);
     });
 
+const getPlayerCount = (sender, id) =>
+  db
+    .ref(`users/${sender}/games/${id}`)
+    .once('value')
+    .then(snapshot => snapshot.val().count)
+    .catch(err => {
+      throw new Error(`Read error: ${err}`);
+    });
+
 const updateCount = (sender, id) =>
   getCount(sender, id)
     .then(count => setCurrentCount(sender, id, count + 1))
@@ -168,4 +177,5 @@ module.exports = {
   addPlayer,
   endRound,
   updateCount,
+  getPlayerCount,
 };

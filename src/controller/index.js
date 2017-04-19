@@ -6,8 +6,9 @@ const actions = require('../constants');
 const api = require('../api');
 const db = require('../db');
 const getQuestions = require('../db/topics').getQuestions;
-const getEmojis = require('../db/emojis').getRandomEmojis;
+const emojis = require('../db/emojis');
 const createImageUrl = require('../utils').createImageUrl;
+const getTopics = require('../db/topics').getTopics;
 
 const sendMessage = api.sendMessage;
 const sendMessages = api.sendMessages;
@@ -32,25 +33,38 @@ const createTopicReply = (sender, teller, investigators, topics, id) =>
     }))
   );
 
+const handleGameStart = async((sender, payload, topics) => {
+  const id = actions.getPayloadId(payload);
+  const round = asyncAwait(db.getRound(sender, id));
+  const players = asyncAwait(db.getPlayers(sender, id));
+  const tellerIndex = round % players.length;
+  const teller = players[tellerIndex].emoji;
+  const investigators = players
+    .filter((player, index) => index !== tellerIndex)
+    .map(player => player.emoji);
+  sendMessages([
+    createRoundView(sender, round, players),
+    createTopicReply(sender, teller, investigators, topics, id),
+  ]);
+});
+
 module.exports = {
-  handleStart: async((sender, topics) => {
+  handleStart: async(sender => {
     const id = asyncAwait(db.newGame(sender));
-    const emojis = getEmojis(2);
 
-    asyncAwait(db.addPlayer(sender, id, 'Player 1', emojis[0]));
-    asyncAwait(db.addPlayer(sender, id, 'Player 2', emojis[1]));
-
-    const round = asyncAwait(db.getRound(sender, id));
-    const players = asyncAwait(db.getPlayers(sender, id));
-    const tellerIndex = round % players.length;
-    const teller = players[tellerIndex].emoji;
-    const investigators = players
-      .filter((player, index) => index !== tellerIndex)
-      .map(player => player.emoji);
-    sendMessages([
-      createRoundView(sender, round, players),
-      createTopicReply(sender, teller, investigators, topics, id),
-    ]);
+    sendMessage(
+      createQuestion(
+        sender,
+        'How many players?',
+        [2, 3, 4, 5].map(count => ({
+          text: count,
+          payload: actions.createPayload(
+            actions.createPlayerCountSelector(count),
+            id
+          ),
+        }))
+      )
+    );
   }),
 
   handleDefaultMessage: (sender, text) => {
@@ -62,19 +76,54 @@ module.exports = {
     );
   },
 
-  handlePlayerSet: async((sender, payload) => {
-    const id = asyncAwait(db.newGame(sender));
+  handlePlayerCountSet: async((sender, payload) => {
+    const id = actions.getPayloadId(payload);
     const playerCount = actions.getPlayerCount(payload);
-  }),
+    const currCount = 0;
+    asyncAwait(db.setPlayerCount(sender, id, playerCount));
 
-  handleAddPlayer: (sender, payload) => {
     sendMessage(
-      createTextMessage(
+      createQuestion(
         sender,
-        `Add player is not yet supported with payload: ${payload}`
+        `Player ${currCount + 1}: Choose a game piece.`,
+        Object.keys(emojis).map(piece => ({
+          text: emojis[piece],
+          payload: actions.createPayload(
+            actions.createPieceSelector(piece),
+            id
+          ),
+        }))
       )
     );
-  },
+  }),
+
+  handleAddPlayer: async((sender, payload) => {
+    const id = actions.getPayloadId(payload);
+    const piece = actions.getPiece(payload);
+    const playerCount = asyncAwait(db.getPlayerCount(sender, id));
+    const currCount = asyncAwait(db.getCount(sender, id)) + 1;
+
+    asyncAwait(db.addPlayer(sender, id, `Player ${currCount}`, emojis[piece]));
+    asyncAwait(db.updateCount(sender, id));
+
+    if (currCount < playerCount) {
+      sendMessage(
+        createQuestion(
+          sender,
+          `Player ${currCount}: Choose a game piece.`,
+          Object.keys(emojis).map(emoji => ({
+            text: emojis[emoji],
+            payload: actions.createPayload(
+              actions.createPieceSelector(piece),
+              id
+            ),
+          }))
+        )
+      );
+    } else {
+      handleGameStart(sender, payload, getTopics());
+    }
+  }),
 
   handleTopicSelect: async((sender, payload) => {
     const gameID = actions.getPayloadId(payload);
