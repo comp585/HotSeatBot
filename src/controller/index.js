@@ -6,7 +6,7 @@ const actions = require('../constants');
 const api = require('../api');
 const db = require('../db');
 const getQuestions = require('../db/topics').getQuestions;
-const emojis = require('../db/emojis');
+const emojis = require('../db/emojis').emojis;
 const createImageUrl = require('../utils').createImageUrl;
 const getTopics = require('../db/topics').getTopics;
 
