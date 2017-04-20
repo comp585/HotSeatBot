@@ -133,7 +133,18 @@ module.exports = {
       ]),
     ]);
   }),
-
+  handleTellerDirections: (sender, payload) => {
+    const gameID = actions.getPayloadId(payload);
+    sendMessage(
+      createQuestion(sender, 'Teller, get ready to receive your secret directions', [
+        {
+          text: 'Ready',
+          payload: actions.createPayload(actions.READY, gameID),
+          image_url: createImageUrl('checkBlue.png'),
+        }
+      ])
+    );
+  },
   handleChoiceSet: (sender, payload) => {
     const gameID = actions.getPayloadId(payload);
     sendMessage(

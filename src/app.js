@@ -80,8 +80,10 @@ const receivedReply = event => {
     payload.startsWith(actions.SELECT_LIE)
   ) {
     controller.handleChoiceSelection(senderID, payload);
-  } else if (actions.isTopicSelection(payload)) {
+  } else if (payload.startsWith(actions.READY)) {
     controller.handleTopicSelect(senderID, payload);
+  } else if (actions.isTopicSelection(payload)) {
+    controller.handleTellerDirections(senderID, payload);
   } else if (payload.startsWith(actions.CONTINUE_GAME)) {
     controller.handleContinue(senderID, topics, payload);
   } else if (actions.isConfirmAnswer(payload)) {
