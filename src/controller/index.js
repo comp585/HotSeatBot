@@ -144,9 +144,9 @@ module.exports = {
         },
         {
           text: msg,
-          payload: actions.createPayload(actions.CONFIRM_ANSWER, gameID),
-        },
-      ])
+          payload: actions.createPayload(actions.CONFIRM_ANSWER, gameID)
+        }
+      ]),
     );
   }),
   handleChoiceSet: (sender, payload) => {
