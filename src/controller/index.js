@@ -108,7 +108,7 @@ module.exports = {
     }
   }),
 
-  handleTopicSelect: async((sender, payload) => {
+  handleTopicSelect: (sender, payload) => {
     const gameID = actions.getPayloadId(payload);
     const topic = actions.getTopic(payload);
     const questions = getQuestions(topic);
@@ -124,7 +124,7 @@ module.exports = {
         }
       ])
     ]);
-  }),
+  },
   handleTellerDirections: async((sender, payload) => {
     const gameID = actions.getPayloadId(payload);
     const answer = Math.random() > 0.5;
