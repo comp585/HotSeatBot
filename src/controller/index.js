@@ -125,7 +125,7 @@ module.exports = {
       ])
     ]);
   }),
-  handleTellerDirections: (sender, payload) => {
+  handleTellerDirections: async((sender, payload) => {
     const gameID = actions.getPayloadId(payload);
     const answer = Math.random() > 0.5;
     const msg = answer ? 'Tell the truth.' : 'Tell a lie';
@@ -144,7 +144,7 @@ module.exports = {
         }
       ]),
     );
-  },
+  }),
   handleChoiceSet: (sender, payload) => {
     const gameID = actions.getPayloadId(payload);
     sendMessage(
