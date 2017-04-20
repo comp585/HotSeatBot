@@ -116,13 +116,17 @@ module.exports = {
 
     sendMessages([
       createTextMessage(sender, `Question: ${question}`),
-      createQuestion(sender, 'Teller, get ready to receive your secret directions', [
-        {
-          text: 'Ready',
-          payload: actions.createPayload(actions.READY, gameID),
-          image_url: createImageUrl('checkBlue.png'),
-        }
-      ])
+      createQuestion(
+        sender,
+        'Teller, get ready to receive your secret directions',
+        [
+          {
+            text: 'Ready',
+            payload: actions.createPayload(actions.READY, gameID),
+            image_url: createImageUrl('checkBlue.png'),
+          },
+        ]
+      ),
     ]);
   },
   handleTellerDirections: async((sender, payload) => {
@@ -136,13 +140,13 @@ module.exports = {
         {
           text: 'Hide',
           payload: actions.createPayload(actions.CONFIRM_ANSWER, gameID),
-          image_url: createImageUrl('zipper-mouth-face.png')
+          image_url: createImageUrl('zipper-mouth-face.png'),
         },
         {
           text: msg,
           payload: actions.createPayload(actions.CONFIRM_ANSWER, gameID),
-        }
-      ]),
+        },
+      ])
     );
   }),
   handleChoiceSet: (sender, payload) => {
