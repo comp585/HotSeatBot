@@ -114,12 +114,24 @@ module.exports = {
     const questions = getQuestions(topic);
     const question = api.getRandomQuestion(questions);
 
+    sendMessages([
+      createTextMessage(sender, `Question: ${question}`),
+      createQuestion(sender, 'Teller, get ready to receive your secret directions', [
+        {
+          text: 'Ready',
+          payload: actions.createPayload(actions.READY, gameID),
+          image_url: createImageUrl('checkBlue.png'),
+        }
+      ])
+    ]);
+  }),
+  handleTellerDirections: (sender, payload) => {
+    const gameID = actions.getPayloadId(payload);
     const answer = Math.random() > 0.5;
     const msg = answer ? 'Tell the truth.' : 'Tell a lie';
     asyncAwait(db.setAnswer(sender, gameID, answer));
 
-    sendMessages([
-      createTextMessage(sender, `Question: ${question}`),
+    sendMessage(
       createQuestion(sender, 'Press Hide to continue!', [
         {
           text: 'Hide',
@@ -131,18 +143,6 @@ module.exports = {
           payload: actions.createPayload(actions.CONFIRM_ANSWER, gameID),
         }
       ]),
-    ]);
-  }),
-  handleTellerDirections: (sender, payload) => {
-    const gameID = actions.getPayloadId(payload);
-    sendMessage(
-      createQuestion(sender, 'Teller, get ready to receive your secret directions', [
-        {
-          text: 'Ready',
-          payload: actions.createPayload(actions.READY, gameID),
-          image_url: createImageUrl('checkBlue.png'),
-        }
-      ])
     );
   },
   handleChoiceSet: (sender, payload) => {
