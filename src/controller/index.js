@@ -48,7 +48,7 @@ const handleGameStart = async((sender, payload, topics) => {
 const createPieceSelection = (sender, id, currCount) =>
   createQuestion(
     sender,
-    `Player ${currCount}: Choose a game piece.`,
+    `Player ${currCount + 1}: Choose a game piece.`,
     Object.keys(emojis).map(emoji => ({
       text: emojis[emoji],
       payload: actions.createPayload(actions.createPieceSelector(emoji), id),
