@@ -208,6 +208,8 @@ module.exports = {
   handleChoiceSelection: async((sender, payload) => {
     const gameID = actions.getPayloadId(payload);
     const answer = asyncAwait(db.getAnswer(sender, gameID));
+    const round = asyncAwait(db.getRound(sender, gameID));
+    const players = asyncAwait(db.getPlayers(sender, gameID));
     if (answer === undefined) {
       sendMessage(createTextMessage(sender, 'Sorry, game data not found'));
     } else {
@@ -219,6 +221,7 @@ module.exports = {
       if (over) {
         const winners = asyncAwait(db.getWinners(sender, gameID));
         sendMessages([
+          createRoundView(sender, round, players),
           createTextMessage(
             sender,
             `Game Over: ${winners.join(', ')} win${winners.length > 1 ? '' : 's'}!`
