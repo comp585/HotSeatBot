@@ -105,8 +105,6 @@ const receivedPostback = event => {
     controller.handleStart(senderID);
   } else if (actions.isNewGamePayload(payload)) {
     controller.handleStart(senderID, topics);
-  } else if (actions.isAddPlayerPayload(payload)) {
-    controller.handleAddPlayer(senderID, payload);
   } else {
     controller.handleDefaultPostback(senderID, payload);
   }
