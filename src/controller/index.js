@@ -59,7 +59,7 @@ module.exports = {
   handleGetStarted: async(sender => {
     const id = asyncAwait(db.newGame(sender));
 
-    sendMessages(
+    sendMessages([
       createTextMessage(
         sender,
         "I'm going to ask you and anyone you're with a few questions...😜"
@@ -77,8 +77,8 @@ module.exports = {
           text: "Let's go!",
           payload: actions.createPayload(actions.GO, id),
         },
-      ])
-    );
+      ]),
+    ]);
   }),
 
   handleNewStart: (sender, payload) => {
