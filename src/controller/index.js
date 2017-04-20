@@ -64,18 +64,20 @@ module.exports = {
         sender,
         "I'm going to ask you and anyone you're with a few questions...😜"
       ),
-      createQuestion(
+      createTextMessage(
         sender,
-        "Take turns on the Hot Seat, where you'll be told to either tell the truth 😅 or lie 🤥. " +
-          'After you answer a question, everyone else has to decide whether they believe you! Ready ' +
-          'for a good time?',
-        [
-          {
-            text: "Let's go!",
-            payload: actions.createPayload(actions.GO, id),
-          },
-        ]
-      )
+        "Take turns on the Hot Seat, where you'll be told to either tell the truth 😅 or lie 🤥"
+      ),
+      createTextMessage(
+        sender,
+        'After you answer a question, everyone else has to decide whether they believe you!'
+      ),
+      createQuestion(sender, 'Ready for a good time?', [
+        {
+          text: "Let's go!",
+          payload: actions.createPayload(actions.GO, id),
+        },
+      ])
     );
   }),
 
