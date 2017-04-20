@@ -56,7 +56,48 @@ const createPieceSelection = (sender, id, currCount) =>
   );
 
 module.exports = {
-  handleStart: async(sender => {
+  handleGetStarted: async(sender => {
+    const id = asyncAwait(db.newGame(sender));
+
+    sendMessages(
+      createTextMessage(
+        sender,
+        "I'm going to ask you and anyone you're with a few questions...😜"
+      ),
+      createQuestion(
+        sender,
+        "Take turns on the Hot Seat, where you'll be told to either tell the truth 😅 or lie 🤥. " +
+          'After you answer a question, everyone else has to decide whether they believe you! Ready ' +
+          'for a good time?',
+        [
+          {
+            text: "Let's go!",
+            payload: actions.createPayload(actions.GO, id),
+          },
+        ]
+      )
+    );
+  }),
+
+  handleNewStart: (sender, payload) => {
+    const id = actions.getPayloadId(payload);
+
+    sendMessage(
+      createQuestion(
+        sender,
+        'How many players?',
+        [2, 3, 4, 5].map(count => ({
+          text: count,
+          payload: actions.createPayload(
+            actions.createPlayerCountSelector(count),
+            id
+          ),
+        }))
+      )
+    );
+  },
+
+  handleReStart: async(sender => {
     const id = asyncAwait(db.newGame(sender));
 
     sendMessage(

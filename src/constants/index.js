@@ -13,6 +13,7 @@ const NEW_GAME = 'NEW_GAME';
 const COUNT = 'COUNT';
 const PIECE = 'PIECE';
 const READY = 'READY';
+const GO = 'GO';
 
 module.exports = {
   GET_STARTED_PAYLOAD,
@@ -25,6 +26,7 @@ module.exports = {
   CONTINUE_GAME,
   NEW_GAME,
   READY,
+  GO,
 
   createPayload: (label, id) => label + del + id,
 
