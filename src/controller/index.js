@@ -151,7 +151,7 @@ module.exports = {
     }
   }),
 
-  handleTopicSelect: (sender, payload) => {
+  handleTopicSelect: async((sender, payload) => {
     const gameID = actions.getPayloadId(payload);
     const topic = actions.getTopic(payload);
     const questions = getQuestions(topic);
@@ -175,7 +175,8 @@ module.exports = {
         ]
       ),
     ]);
-  },
+  }),
+
   handleTellerDirections: async((sender, payload) => {
     const gameID = actions.getPayloadId(payload);
     const answer = Math.random() > 0.5;
@@ -196,7 +197,8 @@ module.exports = {
       ])
     );
   }),
-  handleChoiceSet: (sender, payload) => {
+
+  handleChoiceSet: async((sender, payload) => {
     const gameID = actions.getPayloadId(payload);
     const round = asyncAwait(db.getRound(sender, gameID));
     const players = asyncAwait(db.getPlayers(sender, gameID));
@@ -211,7 +213,7 @@ module.exports = {
         },
       ])
     );
-  },
+  }),
 
   handleChoiceSelection: async((sender, payload) => {
     const gameID = actions.getPayloadId(payload);
