@@ -262,23 +262,32 @@ module.exports = {
     }
   }),
 
-  handleConversationDone: (sender, payload) => {
+  handleConversationDone: async((sender, payload) => {
     const gameID = actions.getPayloadId(payload);
+    const round = asyncAwait(db.getRound(sender, gameID));
+    const players = asyncAwait(db.getPlayers(sender, gameID));
+    const teller = api.getTeller(round, players);
+    const investigators = api.getInvestigators(round, players).join(', ');
+
     sendMessage(
-      createQuestion(sender, 'Investigator guess.', [
-        {
-          text: 'Truth',
-          payload: actions.createPayload(actions.SELECT_TRUTH, gameID),
-          image_url: createImageUrl('check.png'),
-        },
-        {
-          text: 'False',
-          payload: actions.createPayload(actions.SELECT_LIE, gameID),
-          image_url: createImageUrl('x.png'),
-        },
-      ])
+      createQuestion(
+        sender,
+        `${investigators}, is ${teller} lying or telling the truth?`,
+        [
+          {
+            text: 'Truth',
+            payload: actions.createPayload(actions.SELECT_TRUTH, gameID),
+            image_url: createImageUrl('check.png'),
+          },
+          {
+            text: 'False',
+            payload: actions.createPayload(actions.SELECT_LIE, gameID),
+            image_url: createImageUrl('x.png'),
+          },
+        ]
+      )
     );
-  },
+  }),
 
   handleDefaultReply: (sender, payload) => {
     sendMessage(
