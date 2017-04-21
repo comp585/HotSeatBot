@@ -111,12 +111,21 @@ const getRandomQuestion = questions => {
   return questions[index];
 };
 
-const createRoundView = (sender, round, players) => {
-  const tellerIndex = round % players.length;
-  const teller = players[tellerIndex].emoji;
-  const investigators = players
+const getTellerIndex = (round, players) => round % players.length;
+
+const getTeller = (round, players) =>
+  players[getTellerIndex(round, players)].emoji;
+
+const getInvestigators = (round, players) => {
+  const tellerIndex = getTellerIndex(round, players);
+  return players
     .filter((player, index) => index !== tellerIndex)
     .map(player => player.emoji);
+};
+
+const createRoundView = (sender, round, players) => {
+  const teller = getTeller(round, players);
+  const investigators = getInvestigators(round, players);
   const scoreMsg = players
     .map(player => `${player.emoji}: ${player.score}`)
     .join('\n');
@@ -147,4 +156,6 @@ module.exports = {
   createRoundView,
   getRandomQuestion,
   sendMessages,
+  getTeller,
+  getInvestigators,
 };

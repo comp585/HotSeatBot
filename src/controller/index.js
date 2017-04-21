@@ -157,11 +157,15 @@ module.exports = {
     const questions = getQuestions(topic);
     const question = api.getRandomQuestion(questions);
 
+    const round = asyncAwait(db.getRound(sender, gameID));
+    const players = asyncAwait(db.getPlayers(sender, gameID));
+    const teller = api.getTeller(round, players);
+
     sendMessages([
       createTextMessage(sender, `Question: ${question}`),
       createQuestion(
         sender,
-        'Teller, get ready to receive your secret directions',
+        `${teller}, get ready to receive your secret directions`,
         [
           {
             text: 'Ready',
@@ -194,8 +198,12 @@ module.exports = {
   }),
   handleChoiceSet: (sender, payload) => {
     const gameID = actions.getPayloadId(payload);
+    const round = asyncAwait(db.getRound(sender, gameID));
+    const players = asyncAwait(db.getPlayers(sender, gameID));
+    const teller = api.getTeller(round, players);
+
     sendMessage(
-      createQuestion(sender, 'Teller answer the question.', [
+      createQuestion(sender, `${teller} answer the question.`, [
         {
           text: 'Done',
           payload: actions.createPayload(actions.DONE, gameID),
@@ -210,13 +218,18 @@ module.exports = {
     const answer = asyncAwait(db.getAnswer(sender, gameID));
     const round = asyncAwait(db.getRound(sender, gameID));
     const players = asyncAwait(db.getPlayers(sender, gameID));
+    const teller = api.getTeller(round, players);
+    const investigators = api.getInvestigators(round, players);
+    const winnerText = investigators.length > 1 ? 'win' : 'win';
+    const investigatorText = investigators.join(', ');
+
     if (answer === undefined) {
       sendMessage(createTextMessage(sender, 'Sorry, game data not found'));
     } else {
       const res = payload.startsWith(actions.SELECT_TRUTH);
       const resMsg = res === answer
-        ? 'Investigator wins this round!'
-        : 'Teller wins this round!';
+        ? `${investigatorText} ${winnerText} this round!`
+        : `${teller} wins this round!`;
       const over = asyncAwait(db.endRound(sender, gameID, res)) > 0;
       if (over) {
         const winners = asyncAwait(db.getWinners(sender, gameID));
