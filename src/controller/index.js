@@ -236,7 +236,6 @@ module.exports = {
       if (over) {
         const winners = asyncAwait(db.getWinners(sender, gameID));
         sendMessages([
-          createRoundView(sender, round, players),
           createTextMessage(
             sender,
             `Game Over: ${winners.join(', ')} win${winners.length > 1 ? '' : 's'}!`
