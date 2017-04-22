@@ -118,12 +118,18 @@ module.exports = {
   }),
 
   handleDefaultMessage: (sender, text) => {
-    sendMessage(
-      createTextMessage(
-        sender,
-        `Text received, echo: ${text.substring(0, 200)}`
-      )
-    );
+    switch (text) {
+      case 'New Game':
+        module.exports.handleGetStarted(sender);
+        break;
+      case 'Restart Bot':
+        module.exports.handleReStart(sender);
+        break;
+      default:
+        sendMessage(
+          createTextMessage(sender, `You sent: ${text.substring(0, 200)}`)
+        );
+    }
   },
 
   handlePlayerCountSet: async((sender, payload) => {
