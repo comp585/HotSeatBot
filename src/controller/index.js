@@ -228,7 +228,7 @@ module.exports = {
     const players = asyncAwait(db.getPlayers(sender, gameID));
     const teller = api.getTeller(round, players);
     const investigators = api.getInvestigators(round, players);
-    const winnerText = investigators.length > 1 ? 'win' : 'win';
+    const winnerText = investigators.length > 1 ? 'win' : 'wins';
     const investigatorText = investigators.join(', ');
 
     if (answer === undefined) {
