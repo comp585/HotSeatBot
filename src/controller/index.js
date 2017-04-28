@@ -316,6 +316,8 @@ module.exports = {
       .filter((player, index) => index !== tellerIndex)
       .map(player => player.emoji);
     sendMessages([
+      createTextMessage(sender, `Welcome to round ${round + 1}!`),
+      createTextMessage(sender, `${teller}, you're now on the hot seat!`),
       createRoundView(sender, round, players),
       createTopicReply(sender, teller, investigators, topics, id),
     ]);

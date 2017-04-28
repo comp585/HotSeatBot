@@ -124,19 +124,11 @@ const getInvestigators = (round, players) => {
 };
 
 const createRoundView = (sender, round, players) => {
-  const teller = getTeller(round, players);
-  const investigators = getInvestigators(round, players);
   const scoreMsg = players
     .map(player => `${player.emoji}: ${player.score}`)
     .join('\n');
   const msg = dedent`
-    Round ${round + 1}
-    ------------------
-    Roles
-    Teller: ${teller}
-    Investigator(s): ${investigators.join(', ')}
-    ------------------
-    Scores
+    Here is the current score:
     ${scoreMsg}
     `;
 
