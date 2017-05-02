@@ -12,7 +12,7 @@ firebase.initializeApp(config);
 
 const db = firebase.database();
 
-const playTo = 3;
+const getPlayTo = playerCount => playerCount + 1;
 
 const updateGame = (sender, id, game) =>
   db.ref(`users/${sender}/games/${id}`).set(game).then(() => id).catch(err => {
@@ -87,7 +87,8 @@ const endRound = (sender, id, answer) => {
       const currGame = game;
       const correct = answer === currGame.answer;
       const keys = Object.keys(currGame.players);
-      const tellerIndex = currGame.round % Object.keys(currGame.players).length;
+      const playerCount = keys.length;
+      const tellerIndex = currGame.round % playerCount;
       currGame.round += 1;
       for (let i = 0; i < keys.length; i += 1) {
         if (i === tellerIndex) {
@@ -96,7 +97,7 @@ const endRound = (sender, id, answer) => {
           currGame.players[keys[i]].score += correct ? 1 : 0;
         }
 
-        if (currGame.players[keys[i]].score >= playTo) {
+        if (currGame.players[keys[i]].score >= getPlayTo(playerCount)) {
           shouldEnd = true;
         }
       }
@@ -115,7 +116,7 @@ const getPlayers = (sender, id) =>
 const getWinners = (sender, id) =>
   getPlayers(sender, id).then(players =>
     players
-      .filter(player => player.score >= playTo)
+      .filter(player => player.score >= getPlayTo(players.length))
       .map(player => player.emoji));
 
 const getRound = (sender, id) => readGameState(sender, id, 'round');
