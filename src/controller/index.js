@@ -62,7 +62,8 @@ const handleRoundStart = async((sender, payload, topics) => {
 
     // Set the first topic
     const firstTopic = 'Adventure';
-    const firstTopicMsg = 'The first topic will be ️adventure!';
+    const emoji = '✈️';
+    const firstTopicMsg = `The first topic is ${firstTopic.toLowerCase()} ${emoji}!`;
     asyncAwait(db.setTopic(sender, id, firstTopic));
 
     const reply = createQuestion(sender, 'Ready?', [
