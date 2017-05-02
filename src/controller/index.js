@@ -43,13 +43,29 @@ const handleRoundStart = async((sender, payload, topics) => {
     createTextMessage(sender, `Welcome to round ${round + 1}!`),
     createTextMessage(sender, `${teller}, you're now on the hot seat!`),
     createRoundView(sender, round, players),
-    createTopicReply(sender, teller, investigators, topics, id),
   ];
 
   // Provide round end information if this is the first round
   if (round === 0) {
     const infoMsg = `The first player to get ${players.length + 1} points wins!`;
+
+    // Set the first topic
+    const firstTopic = 'Adventure';
+    const firstTopicMsg = 'The first topic will be ️adventure ✈️!';
+    asyncAwait(db.setTopic(sender, id, firstTopic));
+
+    const reply = createQuestion(sender, 'Ready?', [
+      {
+        text: 'Go',
+        payload: api.createPayload(actions.createTopicSelector(firstTopic), id),
+      },
+    ]);
+
     messages.splice(1, 0, createTextMessage(sender, infoMsg));
+    messages.push(createTextMessage(sender, firstTopicMsg));
+    messages.push(reply);
+  } else {
+    messages.push(createTopicReply(sender, teller, investigators, topics, id));
   }
 
   sendMessages(messages);
