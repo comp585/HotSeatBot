@@ -51,7 +51,7 @@ const handleRoundStart = async((sender, payload, topics) => {
 
     // Set the first topic
     const firstTopic = 'Adventure';
-    const firstTopicMsg = 'The first topic will be ️adventure ✈️!';
+    const firstTopicMsg = 'The first topic will be ️adventure!';
     asyncAwait(db.setTopic(sender, id, firstTopic));
 
     const reply = createQuestion(sender, 'Ready?', [
