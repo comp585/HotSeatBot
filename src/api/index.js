@@ -56,6 +56,19 @@ const createTextMessage = (sender, text) => {
   return wrapGenericMsg(sender, messageData);
 };
 
+const createImageMessage = (sender, url) => {
+  const messageData = {
+    attachment: {
+      type: 'image',
+      payload: {
+        url,
+      },
+    },
+  };
+
+  return wrapGenericMsg(sender, messageData);
+};
+
 const createPostbackButton = button => ({
   type: 'postback',
   title: button.title,
@@ -150,4 +163,5 @@ module.exports = {
   sendMessages,
   getTeller,
   getInvestigators,
+  createImageMessage,
 };
