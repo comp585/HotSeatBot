@@ -315,11 +315,19 @@ module.exports = {
     const investigators = players
       .filter((player, index) => index !== tellerIndex)
       .map(player => player.emoji);
-    sendMessages([
+    const messages = [
       createTextMessage(sender, `Welcome to round ${round + 1}!`),
       createTextMessage(sender, `${teller}, you're now on the hot seat!`),
       createRoundView(sender, round, players),
       createTopicReply(sender, teller, investigators, topics, id),
-    ]);
+    ];
+
+    // Provide round end information if this is the first round
+    if (round === 0) {
+      const infoMsg = `The first player to get ${players.length + 1} points wins!`;
+      messages.splice(1, 0, infoMsg);
+    }
+
+    sendMessages(messages);
   }),
 };
