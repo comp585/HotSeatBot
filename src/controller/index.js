@@ -16,10 +16,17 @@ const createTextMessage = api.createTextMessage;
 const createQuestion = api.createQuestion;
 const createRoundView = api.createRoundView;
 
-const createTopicReply = (sender, teller, investigators, topics, id) =>
+const createTopicReply = (
+  sender,
+  teller,
+  investigators,
+  topics,
+  id,
+  prevTeller
+) =>
   createQuestion(
     sender,
-    dedent`${investigators.join(', ')}, choose a topic you want to learn more about ${teller}.`,
+    dedent`${prevTeller}, choose a topic you want to learn more about ${teller}.`,
     topics.map(topic => ({
       text: topic.category,
       payload: actions.createPayload(
@@ -35,7 +42,11 @@ const handleRoundStart = async((sender, payload, topics) => {
   const round = asyncAwait(db.getRound(sender, id));
   const players = asyncAwait(db.getPlayers(sender, id));
   const tellerIndex = round % players.length;
+  const prevTellerIndex = tellerIndex - 1 >= 0
+    ? tellerIndex - 1
+    : players.length - 1;
   const teller = players[tellerIndex].emoji;
+  const prevTeller = players[prevTellerIndex].emoji;
   const investigators = players
     .filter((player, index) => index !== tellerIndex)
     .map(player => player.emoji);
@@ -68,7 +79,9 @@ const handleRoundStart = async((sender, payload, topics) => {
     messages.push(createTextMessage(sender, firstTopicMsg));
     messages.push(reply);
   } else {
-    messages.push(createTopicReply(sender, teller, investigators, topics, id));
+    messages.push(
+      createTopicReply(sender, teller, investigators, topics, id, prevTeller)
+    );
   }
 
   sendMessages(messages);
