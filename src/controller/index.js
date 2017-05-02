@@ -170,15 +170,14 @@ module.exports = {
   handleTopicSelect: async((sender, payload) => {
     const gameID = actions.getPayloadId(payload);
     const topic = actions.getTopic(payload);
-    const questions = getQuestions(topic);
-    const question = api.getRandomQuestion(questions);
 
     const round = asyncAwait(db.getRound(sender, gameID));
     const players = asyncAwait(db.getPlayers(sender, gameID));
     const teller = api.getTeller(round, players);
 
+    asyncAwait(db.setTopic(sender, gameID, topic));
+
     sendMessages([
-      createTextMessage(sender, `Question: ${question}`),
       createQuestion(
         sender,
         `${teller}, get ready to receive your secret directions`,
@@ -219,16 +218,19 @@ module.exports = {
     const round = asyncAwait(db.getRound(sender, gameID));
     const players = asyncAwait(db.getPlayers(sender, gameID));
     const teller = api.getTeller(round, players);
+    const questions = getQuestions(db.getTopic(sender, gameID));
+    const question = api.getRandomQuestion(questions);
 
-    sendMessage(
+    sendMessages([
+      createTextMessage(sender, `Question: ${question}`),
       createQuestion(sender, `${teller} answer the question.`, [
         {
           text: 'Done',
           payload: actions.createPayload(actions.DONE, gameID),
           image_url: createImageUrl('checkBlue.png'),
         },
-      ])
-    );
+      ]),
+    ]);
   }),
 
   handleChoiceSelection: async((sender, payload) => {

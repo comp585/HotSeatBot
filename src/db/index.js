@@ -136,6 +136,11 @@ const updateCount = (sender, id) =>
     .then(count => setCurrentCount(sender, id, count + 1))
     .then(val => val);
 
+const setTopic = (sender, id, topic) =>
+  setGameState(sender, id, 'topic', topic);
+
+const getTopic = (sender, id) => readGameState(sender, id, 'topic');
+
 module.exports = {
   newGame,
   setAnswer,
@@ -149,4 +154,6 @@ module.exports = {
   endRound,
   updateCount,
   getPlayerCount,
+  setTopic,
+  getTopic,
 };
