@@ -49,7 +49,7 @@ const handleRoundStart = async((sender, payload, topics) => {
   // Provide round end information if this is the first round
   if (round === 0) {
     const infoMsg = `The first player to get ${players.length + 1} points wins!`;
-    messages.splice(1, 0, infoMsg);
+    messages.splice(1, 0, createTextMessage(sender, infoMsg));
   }
 
   sendMessages(messages);
