@@ -57,7 +57,10 @@ const handleRoundStart = async((sender, payload, topics) => {
     const reply = createQuestion(sender, 'Ready?', [
       {
         text: 'Go',
-        payload: api.createPayload(actions.createTopicSelector(firstTopic), id),
+        payload: actions.createPayload(
+          actions.createTopicSelector(firstTopic),
+          id
+        ),
       },
     ]);
 
