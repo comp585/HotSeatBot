@@ -317,6 +317,6 @@ module.exports = {
   },
 
   handleContinue: async((sender, topics, payload) => {
-    handleRoundStart(sender, topics, payload);
+    handleRoundStart(sender, payload, topics);
   }),
 };
