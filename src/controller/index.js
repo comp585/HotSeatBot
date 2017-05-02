@@ -218,7 +218,8 @@ module.exports = {
     const round = asyncAwait(db.getRound(sender, gameID));
     const players = asyncAwait(db.getPlayers(sender, gameID));
     const teller = api.getTeller(round, players);
-    const questions = getQuestions(db.getTopic(sender, gameID));
+    const topics = asyncAwait(db.getTopic(sender, gameID));
+    const questions = getQuestions(topics);
     const question = api.getRandomQuestion(questions);
 
     sendMessages([
