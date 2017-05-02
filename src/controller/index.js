@@ -30,7 +30,7 @@ const createTopicReply = (sender, teller, investigators, topics, id) =>
     }))
   );
 
-const handleGameStart = async((sender, payload, topics) => {
+const handleRoundStart = async((sender, payload, topics) => {
   const id = actions.getPayloadId(payload);
   const round = asyncAwait(db.getRound(sender, id));
   const players = asyncAwait(db.getPlayers(sender, id));
@@ -39,10 +39,20 @@ const handleGameStart = async((sender, payload, topics) => {
   const investigators = players
     .filter((player, index) => index !== tellerIndex)
     .map(player => player.emoji);
-  sendMessages([
+  const messages = [
+    createTextMessage(sender, `Welcome to round ${round + 1}!`),
+    createTextMessage(sender, `${teller}, you're now on the hot seat!`),
     createRoundView(sender, round, players),
     createTopicReply(sender, teller, investigators, topics, id),
-  ]);
+  ];
+
+  // Provide round end information if this is the first round
+  if (round === 0) {
+    const infoMsg = `The first player to get ${players.length + 1} points wins!`;
+    messages.splice(1, 0, infoMsg);
+  }
+
+  sendMessages(messages);
 });
 
 const createPieceSelection = (sender, id, currCount) =>
@@ -153,7 +163,7 @@ module.exports = {
     if (currCount < playerCount) {
       sendMessage(createPieceSelection(sender, id, currCount));
     } else {
-      handleGameStart(sender, payload, getTopics());
+      handleRoundStart(sender, payload, getTopics());
     }
   }),
 
@@ -307,27 +317,6 @@ module.exports = {
   },
 
   handleContinue: async((sender, topics, payload) => {
-    const id = actions.getPayloadId(payload);
-    const round = asyncAwait(db.getRound(sender, id));
-    const players = asyncAwait(db.getPlayers(sender, id));
-    const tellerIndex = round % players.length;
-    const teller = players[tellerIndex].emoji;
-    const investigators = players
-      .filter((player, index) => index !== tellerIndex)
-      .map(player => player.emoji);
-    const messages = [
-      createTextMessage(sender, `Welcome to round ${round + 1}!`),
-      createTextMessage(sender, `${teller}, you're now on the hot seat!`),
-      createRoundView(sender, round, players),
-      createTopicReply(sender, teller, investigators, topics, id),
-    ];
-
-    // Provide round end information if this is the first round
-    if (round === 0) {
-      const infoMsg = `The first player to get ${players.length + 1} points wins!`;
-      messages.splice(1, 0, infoMsg);
-    }
-
-    sendMessages(messages);
+    handleRoundStart(sender, topics, payload);
   }),
 };
