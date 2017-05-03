@@ -88,15 +88,26 @@ const handleRoundStart = async((sender, payload, topics) => {
   sendMessages(messages);
 });
 
-const createPieceSelection = (sender, id, currCount) =>
-  createQuestion(
+const createPieceSelection = async((sender, id, currCount) => {
+  let selectedEmojis = [];
+
+  // get previously selected emojis to prevent duplicate selections.
+  if (currCount > 0) {
+    const players = asyncAwait(db.getPlayers(sender, id));
+    selectedEmojis = players.map(player => player.emoji);
+  }
+
+  return createQuestion(
     sender,
     `Player ${currCount + 1}: Choose a game piece.`,
-    Object.keys(emojis).map(emoji => ({
-      text: emojis[emoji],
-      payload: actions.createPayload(actions.createPieceSelector(emoji), id),
-    }))
+    Object.keys(emojis)
+      .filter(emoji => !selectedEmojis.includes(emoji))
+      .map(emoji => ({
+        text: emojis[emoji],
+        payload: actions.createPayload(actions.createPieceSelector(emoji), id),
+      }))
   );
+});
 
 module.exports = {
   handleGetStarted: async(sender => {

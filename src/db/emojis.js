@@ -2,13 +2,16 @@ const Combinatorics = require('js-combinatorics');
 
 const emojis = {
   alien: '👾',
-  lion: '🦁',
-  tiger: '🐯',
-  turtle: '🐢',
+  cat: '🐱',
+  dragon: '🐲',
   fish: '🐠',
   fox: '🦊',
-  cat: '🐱',
+  lion: '🦁',
+  panda: '🐼',
+  tiger: '🐯',
+  turtle: '🐢',
   unicorn: '🦄',
+  whale: '🐳',
 };
 
 module.exports = {
