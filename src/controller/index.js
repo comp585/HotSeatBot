@@ -88,16 +88,8 @@ const handleRoundStart = async((sender, payload, topics) => {
   sendMessages(messages);
 });
 
-const createPieceSelection = async((sender, id, currCount) => {
-  let selectedEmojis = [];
-
-  // get previously selected emojis to prevent duplicate selections.
-  if (currCount > 0) {
-    const players = asyncAwait(db.getPlayers(sender, id));
-    selectedEmojis = players.map(player => player.emoji);
-  }
-
-  return createQuestion(
+const createPieceSelection = (sender, id, currCount, selectedEmojis) =>
+  createQuestion(
     sender,
     `Player ${currCount + 1}: Choose a game piece.`,
     Object.keys(emojis)
@@ -107,7 +99,6 @@ const createPieceSelection = async((sender, id, currCount) => {
         payload: actions.createPayload(actions.createPieceSelector(emoji), id),
       }))
   );
-});
 
 module.exports = {
   handleGetStarted: async(sender => {
@@ -191,8 +182,9 @@ module.exports = {
     const playerCount = actions.getPlayerCount(payload);
     const currCount = 0;
     asyncAwait(db.setPlayerCount(sender, id, playerCount));
+    const selectedEmojis = [];
 
-    sendMessage(createPieceSelection(sender, id, currCount));
+    sendMessage(createPieceSelection(sender, id, currCount, selectedEmojis));
   }),
 
   handleAddPlayer: async((sender, payload) => {
@@ -201,11 +193,15 @@ module.exports = {
     const playerCount = asyncAwait(db.getPlayerCount(sender, id));
     const currCount = asyncAwait(db.getCount(sender, id)) + 1;
 
+    // get previously selected emojis to prevent duplicate selections.
+    const players = asyncAwait(db.getPlayers(sender, id));
+    selectedEmojis = players.map(player => player.emoji);
+
     asyncAwait(db.addPlayer(sender, id, `Player ${currCount}`, emojis[piece]));
     asyncAwait(db.updateCount(sender, id));
 
     if (currCount < playerCount) {
-      sendMessage(createPieceSelection(sender, id, currCount));
+      sendMessage(createPieceSelection(sender, id, currCount, selectedEmojis));
     } else {
       handleRoundStart(sender, payload, getTopics());
     }
