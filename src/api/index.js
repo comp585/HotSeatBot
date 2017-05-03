@@ -119,8 +119,10 @@ const createQuickReply = (title, payload, imageUrl) => ({
   image_url: imageUrl,
 });
 
+const getRandomIndex = array => Math.floor(Math.random() * array.length);
+
 const getRandomQuestion = questions => {
-  const index = Math.floor(Math.random() * questions.length);
+  const index = getRandomIndex(questions);
   return questions[index];
 };
 
@@ -164,4 +166,5 @@ module.exports = {
   getTeller,
   getInvestigators,
   createImageMessage,
+  getRandomIndex,
 };

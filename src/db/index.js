@@ -1,5 +1,7 @@
 const v4 = require('uuid/v4');
 const firebase = require('firebase');
+const topics = require('../db/topics');
+const api = require('../api');
 
 const config = {
   apiKey: process.env.DB_API_KEY,
@@ -141,6 +143,66 @@ const setTopic = (sender, id, topic) =>
 
 const getTopic = (sender, id) => readGameState(sender, id, 'topic');
 
+/**
+ * Record a question answered by teller so that
+ * it's not considered for future selections
+ */
+const addTellerQuestion = (sender, id, topic, questionIndex) =>
+  getGame(sender, id)
+    .then(game => {
+      const currGame = game;
+      const keys = Object.keys(currGame.players);
+      const playerCount = keys.length;
+      const tellerIndex = currGame.round % playerCount;
+      const teller = keys[tellerIndex];
+      const answered = currGame.players[teller].answered || {};
+
+      if (answered[topic]) {
+        answered[topic].push(questionIndex);
+      } else {
+        answered[topic] = [questionIndex];
+      }
+
+      currGame.players[teller].answered = answered;
+
+      return currGame;
+    })
+    .then(game => updateGame(sender, id, game));
+
+const getTellerQuestion = (sender, id, topic) => {
+  let currGame;
+  let teller;
+  let questionIndex;
+  let question;
+
+  return getGame(sender, id)
+    .then(game => {
+      currGame = game;
+      const keys = Object.keys(currGame.players);
+      const playerCount = keys.length;
+      const tellerIndex = currGame.round % playerCount;
+
+      teller = keys[tellerIndex];
+
+      const tellerAnswered = currGame.players[teller].answered;
+      let prevQuestions = [];
+
+      if (tellerAnswered && tellerAnswered[topic]) {
+        prevQuestions = tellerAnswered[topic];
+      }
+
+      const questions = topics
+        .getQuestions(topic)
+        .filter((q, index) => !prevQuestions.includes(index));
+
+      questionIndex = api.getRandomIndex(questions);
+      question = topics.getQuestions(topic)[questionIndex];
+      return questionIndex;
+    })
+    .then(() => addTellerQuestion(sender, id, topic, questionIndex))
+    .then(() => question);
+};
+
 module.exports = {
   newGame,
   setAnswer,
@@ -156,4 +218,6 @@ module.exports = {
   getPlayerCount,
   setTopic,
   getTopic,
+  addTellerQuestion,
+  getTellerQuestion,
 };
