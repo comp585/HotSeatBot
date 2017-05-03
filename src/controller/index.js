@@ -5,7 +5,6 @@ const dedent = require('dedent-js');
 const actions = require('../constants');
 const api = require('../api');
 const db = require('../db');
-const getQuestions = require('../db/topics').getQuestions;
 const emojis = require('../db/emojis').emojis;
 const createImageUrl = require('../utils').createImageUrl;
 const getTopics = require('../db/topics').getTopics;
@@ -259,8 +258,7 @@ module.exports = {
     const players = asyncAwait(db.getPlayers(sender, gameID));
     const teller = api.getTeller(round, players);
     const topics = asyncAwait(db.getTopic(sender, gameID));
-    const questions = getQuestions(topics);
-    const question = api.getRandomQuestion(questions);
+    const question = asyncAwait(db.getTellerQuestion(sender, gameID, topics));
 
     sendMessages([
       createTextMessage(sender, `Question: ${question}`),

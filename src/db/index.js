@@ -147,27 +147,23 @@ const getTopic = (sender, id) => readGameState(sender, id, 'topic');
  * Record a question answered by teller so that
  * it's not considered for future selections
  */
-const addTellerQuestion = (sender, id, topic, questionIndex) =>
-  getGame(sender, id)
-    .then(game => {
-      const currGame = game;
-      const keys = Object.keys(currGame.players);
-      const playerCount = keys.length;
-      const tellerIndex = currGame.round % playerCount;
-      const teller = keys[tellerIndex];
-      const answered = currGame.players[teller].answered || {};
+const addTellerQuestion = (sender, id, game, topic, questionIndex) => {
+  const currGame = game;
+  const keys = Object.keys(currGame.players);
+  const playerCount = keys.length;
+  const tellerIndex = currGame.round % playerCount;
+  const teller = keys[tellerIndex];
+  const answered = currGame.players[teller].answered || {};
 
-      if (answered[topic]) {
-        answered[topic].push(questionIndex);
-      } else {
-        answered[topic] = [questionIndex];
-      }
+  if (answered[topic]) {
+    answered[topic].push(questionIndex);
+  } else {
+    answered[topic] = [questionIndex];
+  }
 
-      currGame.players[teller].answered = answered;
-
-      return currGame;
-    })
-    .then(game => updateGame(sender, id, game));
+  currGame.players[teller].answered = answered;
+  return updateGame(sender, id, currGame);
+};
 
 const getTellerQuestion = (sender, id, topic) => {
   let currGame;
@@ -199,7 +195,7 @@ const getTellerQuestion = (sender, id, topic) => {
       question = topics.getQuestions(topic)[questionIndex];
       return questionIndex;
     })
-    .then(() => addTellerQuestion(sender, id, topic, questionIndex))
+    .then(() => addTellerQuestion(sender, id, currGame, topic, questionIndex))
     .then(() => question);
 };
 
