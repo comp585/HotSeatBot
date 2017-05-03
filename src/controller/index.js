@@ -93,7 +93,7 @@ const createPieceSelection = (sender, id, currCount, selectedEmojis) =>
     sender,
     `Player ${currCount + 1}: Choose a game piece.`,
     Object.keys(emojis)
-      .filter(emoji => !selectedEmojis.includes(emoji))
+      .filter(emoji => !selectedEmojis.includes(emojis[emoji]))
       .map(emoji => ({
         text: emojis[emoji],
         payload: actions.createPayload(actions.createPieceSelector(emoji), id),
