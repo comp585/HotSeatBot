@@ -193,12 +193,12 @@ module.exports = {
     const playerCount = asyncAwait(db.getPlayerCount(sender, id));
     const currCount = asyncAwait(db.getCount(sender, id)) + 1;
 
-    // get previously selected emojis to prevent duplicate selections.
-    const players = asyncAwait(db.getPlayers(sender, id));
-    selectedEmojis = players.map(player => player.emoji);
-
     asyncAwait(db.addPlayer(sender, id, `Player ${currCount}`, emojis[piece]));
     asyncAwait(db.updateCount(sender, id));
+
+    // get previously selected emojis to prevent duplicate selections.
+    const players = asyncAwait(db.getPlayers(sender, id));
+    const selectedEmojis = players.map(player => player.emoji);
 
     if (currCount < playerCount) {
       sendMessage(createPieceSelection(sender, id, currCount, selectedEmojis));
