@@ -108,25 +108,36 @@ module.exports = {
     sendMessages([
       createTextMessage(
         sender,
-        "I'm going to ask you and anyone you're with a few questions...😜"
+        "I'm going to ask you and anyone you're with a few questions that should really break the ice 🔥..."
       ),
-      createTextMessage(
+      createQuestion(
         sender,
-        "Take turns on the Hot Seat, where you'll be told to either tell the truth 😅 or lie 🤥"
+        "Take turns on the Hot Seat, where you'll be told to either tell the truth 😅 or lie 🤥.",
+        [
+          {
+            text: 'got it',
+            payload: actions.createPayload(actions.NEXT, id),
+          },
+        ]
       ),
-      createTextMessage(
-        sender,
-        'After you answer a question, everyone else has to decide whether they believe you!'
-      ),
-      createQuestion(sender, 'Ready for a good time?', [
-        {
-          text: "Let's go!",
-          payload: actions.createPayload(actions.GO, id),
-        },
-      ]),
     ]);
   }),
+  handleGetStartedStep2: (sender, payload) => {
+    const id = actions.getPayloadId(payload);
 
+    sendMessage(
+      createQuestion(
+        sender,
+        'After you answer a question, everyone else has to decide whether or not they believe you! Ready to play?',
+        [
+          {
+            text: "Let's go!",
+            payload: actions.createPayload(actions.GO, id),
+          },
+        ]
+      )
+    );
+  },
   handleNewStart: (sender, payload) => {
     const id = actions.getPayloadId(payload);
 

@@ -82,6 +82,8 @@ const receivedReply = event => {
     controller.handleChoiceSelection(senderID, payload);
   } else if (payload.startsWith(actions.GO)) {
     controller.handleNewStart(senderID, payload);
+  } else if (payload.startsWith(actions.NEXT)) {
+    controller.handleGetStartedStep2(senderID, payload);
   } else if (payload.startsWith(actions.READY)) {
     controller.handleTellerDirections(senderID, payload);
   } else if (actions.isTopicSelection(payload)) {
