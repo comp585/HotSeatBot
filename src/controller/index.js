@@ -15,6 +15,7 @@ const sendMessages = api.sendMessages;
 const createTextMessage = api.createTextMessage;
 const createQuestion = api.createQuestion;
 const createRoundView = api.createRoundView;
+const createImageMessage = api.createImageMessage;
 
 const createTopicReply = (
   sender,
@@ -326,7 +327,8 @@ module.exports = {
     const teller = api.getTeller(round, players);
     const investigators = api.getInvestigators(round, players).join(', ');
 
-    sendMessage(
+    sendMessages([
+      createImageMessage(sender, createImageUrl('detective.gif')),
       createQuestion(
         sender,
         `${investigators}, is ${teller} lying or telling the truth?`,
@@ -342,8 +344,8 @@ module.exports = {
             image_url: createImageUrl('x.png'),
           },
         ]
-      )
-    );
+      ),
+    ]);
   }),
 
   handleDefaultReply: (sender, payload) => {
