@@ -309,7 +309,9 @@ module.exports = {
           ]),
         ]);
       } else {
+        const gif = answer ? utils.getTruthGif(round) : utils.getLieGif(round);
         sendMessages([
+          createImageMessage(sender, gif),
           createTextMessage(sender, resMsg),
           createQuestion(sender, 'Press to move to the next round!', [
             {

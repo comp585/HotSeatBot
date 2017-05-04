@@ -16,4 +16,14 @@ module.exports = {
     const next = round % gifCount;
     return createImageUrl(`investigate${next}.gif`);
   },
+  getTruthGif: round => {
+    const gifCount = 5;
+    const next = round % gifCount;
+    return createImageUrl(`truth${next}.gif`);
+  },
+  getLieGif: round => {
+    const gifCount = 5;
+    const next = round % gifCount;
+    return createImageUrl(`lie${next}.gif`);
+  },
 };
