@@ -2,28 +2,30 @@ const appUrl = 'https://hot-seat.herokuapp.com/';
 const imgDir = 'img';
 
 const createImageUrl = image => `${appUrl}/${imgDir}/${image}`;
+const gifCounts = {
+  secret: 7,
+  truth: 7,
+  lie: 6,
+  investigate: 7,
+};
 
 module.exports = {
   createImageUrl,
   getTellerIndex: (round, playerCount) => round % playerCount,
   getHideGif: round => {
-    const gifCount = 7;
-    const next = round % gifCount;
-    return createImageUrl(`hush${next}.gif`);
+    const next = round % gifCounts.secret;
+    return createImageUrl(`secret/${next}.gif`);
   },
   getInvestigateGif: round => {
-    const gifCount = 5;
-    const next = round % gifCount;
-    return createImageUrl(`investigate${next}.gif`);
+    const next = round % gifCounts.investigate;
+    return createImageUrl(`investigate/${next}.gif`);
   },
   getTruthGif: round => {
-    const gifCount = 5;
-    const next = round % gifCount;
-    return createImageUrl(`truth${next}.gif`);
+    const next = round % gifCounts.truth;
+    return createImageUrl(`truth/${next}.gif`);
   },
   getLieGif: round => {
-    const gifCount = 5;
-    const next = round % gifCount;
-    return createImageUrl(`lie${next}.gif`);
+    const next = round % gifCounts.lie;
+    return createImageUrl(`lie/${next}.gif`);
   },
 };
