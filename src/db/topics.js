@@ -22,7 +22,7 @@ const topics = [
     url: createImageUrl('personal.png'),
   },
   {
-    category: 'Sex/Sexuality',
+    category: 'Sex & Sexuality',
     url: createImageUrl('devil.png'),
   },
 ];
@@ -74,7 +74,7 @@ const questions = {
     'What’s something you’re bad at?',
     'What is your favorite curse word?',
   ],
-  'Sex/Sexuality': [
+  'Sex & Sexuality': [
     'Where’s the most unusual place you’ve had sex?',
     'If you could have a threesome with any two people in the world who would you choose?',
     'What’s the most pathetic thing you’ve done because you were horny?',
