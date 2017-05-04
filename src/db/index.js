@@ -187,12 +187,14 @@ const getTellerQuestion = (sender, id, topic) => {
         prevQuestions = tellerAnswered[topic];
       }
 
-      const questions = topics
-        .getQuestions(topic)
-        .filter((q, index) => !prevQuestions.includes(index));
+      const topicQuestions = topics.getQuestions(topic);
+      const questions = topicQuestions.filter(
+        (q, index) => !prevQuestions.includes(index)
+      );
 
-      questionIndex = api.getRandomIndex(questions);
-      question = topics.getQuestions(topic)[questionIndex];
+      // use index from original array
+      questionIndex = topicQuestions.indexOf(api.getRandomIndex(questions));
+      question = topicQuestions[questionIndex];
       return questionIndex;
     })
     .then(() => addTellerQuestion(sender, id, currGame, topic, questionIndex))
