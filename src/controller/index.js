@@ -361,7 +361,7 @@ module.exports = {
             image_url: createImageUrl('check.png'),
           },
           {
-            text: 'False',
+            text: 'Lie',
             payload: actions.createPayload(actions.SELECT_LIE, gameID),
             image_url: createImageUrl('x.png'),
           },
