@@ -16,6 +16,7 @@ const emojis = {
 
 module.exports = {
   emojis,
+  getGamePieces: () => emojis,
   getRandomEmojis: count => {
     const cmb = Combinatorics.permutation(emojis).toArray();
     const el = cmb[Math.floor(Math.random() * cmb.length)];

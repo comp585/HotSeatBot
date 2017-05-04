@@ -8,6 +8,7 @@ const db = require('../db');
 const emojis = require('../db/emojis').emojis;
 const createImageUrl = require('../utils').createImageUrl;
 const getTopics = require('../db/topics').getTopics;
+const utils = require('../utils');
 
 const sendMessage = api.sendMessage;
 const sendMessages = api.sendMessages;
@@ -40,7 +41,7 @@ const handleRoundStart = async((sender, payload, topics) => {
   const id = actions.getPayloadId(payload);
   const round = asyncAwait(db.getRound(sender, id));
   const players = asyncAwait(db.getPlayers(sender, id));
-  const tellerIndex = round % players.length;
+  const tellerIndex = utils.getTellerIndex(round, players.length);
   const prevTellerIndex = tellerIndex - 1 >= 0
     ? tellerIndex - 1
     : players.length - 1;

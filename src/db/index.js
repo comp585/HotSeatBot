@@ -2,6 +2,7 @@ const v4 = require('uuid/v4');
 const firebase = require('firebase');
 const topics = require('../db/topics');
 const api = require('../api');
+const utils = require('../utils');
 
 const config = {
   apiKey: process.env.DB_API_KEY,
@@ -90,16 +91,18 @@ const endRound = (sender, id, answer) => {
       const correct = answer === currGame.answer;
       const keys = Object.keys(currGame.players);
       const playerCount = keys.length;
-      const tellerIndex = currGame.round % playerCount;
+      const tellerIndex = utils.getTellerIndex(currGame.round, playerCount);
       currGame.round += 1;
+
       for (let i = 0; i < keys.length; i += 1) {
+        const player = currGame.players[keys[i]];
         if (i === tellerIndex) {
-          currGame.players[keys[i]].score += correct ? 0 : 1;
+          player.score += correct ? 0 : 1;
         } else {
-          currGame.players[keys[i]].score += correct ? 1 : 0;
+          player.score += correct ? 1 : 0;
         }
 
-        if (currGame.players[keys[i]].score >= getPlayTo(playerCount)) {
+        if (player.score >= getPlayTo(playerCount)) {
           shouldEnd = true;
         }
       }
@@ -151,7 +154,7 @@ const addTellerQuestion = (sender, id, game, topic, questionIndex) => {
   const currGame = game;
   const keys = Object.keys(currGame.players);
   const playerCount = keys.length;
-  const tellerIndex = currGame.round % playerCount;
+  const tellerIndex = utils.getTellerIndex(currGame.round, playerCount);
   const teller = keys[tellerIndex];
   const answered = currGame.players[teller].answered || {};
 
@@ -176,7 +179,7 @@ const getTellerQuestion = (sender, id, topic) => {
       currGame = game;
       const keys = Object.keys(currGame.players);
       const playerCount = keys.length;
-      const tellerIndex = currGame.round % playerCount;
+      const tellerIndex = utils.getTellerIndex(currGame.round, playerCount);
 
       teller = keys[tellerIndex];
 
