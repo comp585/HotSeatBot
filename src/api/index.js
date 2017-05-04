@@ -6,7 +6,7 @@ const dedent = require('dedent-js');
 
 Promise.promisifyAll(request, { multiArgs: true });
 
-const actions = require('../constants');
+const actions = require('../actions');
 
 const token = process.env.FB_PAGE_ACCESS_TOKEN;
 

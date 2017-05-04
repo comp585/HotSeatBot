@@ -2,7 +2,7 @@ const async = require('asyncawait/async');
 const asyncAwait = require('asyncawait/await');
 const dedent = require('dedent-js');
 
-const actions = require('../constants');
+const actions = require('../actions');
 const api = require('../api');
 const db = require('../db');
 const emojis = require('../db/emojis').emojis;

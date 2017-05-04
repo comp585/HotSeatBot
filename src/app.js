@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const actions = require('./constants');
+const actions = require('./actions');
 const controller = require('./controller');
 const topics = require('./db/topics').getTopics();
 
