@@ -17,8 +17,9 @@ module.exports = {
     return createImageUrl(`secret/${next}.gif`);
   },
   getInvestigateGif: round => {
-    const next = round % gifCounts.investigate;
-    return createImageUrl(`investigate/${next}.gif`);
+    // const next = round % gifCounts.investigate;
+    // return createImageUrl(`investigate/${next}.gif`);
+    return 'https://media.giphy.com/media/AtRaEatCSjC0w/giphy.gif';
   },
   getTruthGif: round => {
     const next = round % gifCounts.truth;
