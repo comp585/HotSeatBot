@@ -34,6 +34,8 @@ const questions = {
     'You are given three wishes by a genie, what do you wish for (no infinite wishes or loopholes)?',
     'Where have you always wanted to travel?',
     'What large festivals or gatherings have you attended?',
+    'Shark diving, bungee jumping, or sky diving?',
+    'Tell me about the best vacation you’ve ever taken.',
   ],
   'Family & Upbringing': [
     'Who are you closest to in your family?',
@@ -49,6 +51,7 @@ const questions = {
     'What is your favorite food for a midnight snack?',
     'What are some unusual food combinations that you think are tasty?',
     'What common food that most people enjoy makes you gag?',
+    'What’s the worst thing you would do for some free guacamole',
   ],
   Hypotheticals: [
     'Your house, containing everything you own, catches fire. After saving your loved ones and pets, you have time to safely make a final dash to save any one item. What would it be? Why?',
@@ -56,6 +59,11 @@ const questions = {
     'If you were able to live to the age of 90 and retain either the mind or body of a 30-year-old for the last 60 years of your life, which would you want?',
     'If Heaven exists, what would you like to hear God say when you arrive at the Pearly Gates?',
     'If you knew that in one year you would die suddenly, would you change anything about the way you are now living? Why?',
+    'If you could trade lives with one person for an entire day who would it be and why?',
+    'If you had 24 hours to do whatever you liked in your city what would you spend it doing?',
+    'If you didn’t live where you currently live and you could choose anywhere in the world where would it be and why?',
+    'If You Could Have Any Superpower What Would It Be?',
+    'If you could jump into a pool of anything, what would it be?',
   ],
   Personals: [
     'What gets you out of bed in the morning?',
