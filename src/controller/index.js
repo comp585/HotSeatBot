@@ -293,10 +293,17 @@ module.exports = {
       const resMsg = res === answer
         ? `${investigatorText} ${winnerText} this round!`
         : `${teller} wins this round!`;
+      const gif = answer ? utils.getTruthGif(round) : utils.getLieGif(round);
+      const info = answer
+        ? `${teller} was telling the truth!`
+        : `${teller} was telling a lie!`;
       const over = asyncAwait(db.endRound(sender, gameID, res)) > 0;
+
       if (over) {
         const winners = asyncAwait(db.getWinners(sender, gameID));
         sendMessages([
+          createImageMessage(sender, gif),
+          createTextMessage(sender, info),
           createTextMessage(
             sender,
             `Game Over: ${winners.join(', ')} win${winners.length > 1 ? '' : 's'}!`
@@ -309,9 +316,9 @@ module.exports = {
           ]),
         ]);
       } else {
-        const gif = answer ? utils.getTruthGif(round) : utils.getLieGif(round);
         sendMessages([
           createImageMessage(sender, gif),
+          createTextMessage(sender, info),
           createTextMessage(sender, resMsg),
           createQuestion(sender, 'Press to move to the next round!', [
             {
