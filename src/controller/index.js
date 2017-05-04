@@ -330,7 +330,7 @@ module.exports = {
     const investigators = api.getInvestigators(round, players).join(', ');
 
     sendMessages([
-      createImageMessage(sender, createImageUrl('detective.gif')),
+      createImageMessage(sender, utils.getInvestigateGif(round)),
       createQuestion(
         sender,
         `${investigators}, is ${teller} lying or telling the truth?`,
