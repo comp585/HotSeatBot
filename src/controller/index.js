@@ -27,7 +27,7 @@ const createTopicReply = (
 ) =>
   createQuestion(
     sender,
-    dedent`${prevTeller}, choose a topic you want to learn more about ${teller}.`,
+    dedent`${prevTeller}, choose a topic you want to learn more about ${teller}!`,
     topics.map(topic => ({
       text: topic.category,
       payload: actions.createPayload(
@@ -92,7 +92,7 @@ const handleRoundStart = async((sender, payload, topics) => {
 const createPieceSelection = (sender, id, currCount, selectedEmojis) =>
   createQuestion(
     sender,
-    `Player ${currCount + 1}: Choose a game piece.`,
+    `Player ${currCount + 1}: Choose a game piece!`,
     Object.keys(emojis)
       .filter(emoji => !selectedEmojis.includes(emojis[emoji]))
       .map(emoji => ({
@@ -221,7 +221,7 @@ module.exports = {
     sendMessages([
       createQuestion(
         sender,
-        `${teller}, get ready to receive your secret directions`,
+        `${teller}, get ready to receive your secret directions!`,
         [
           {
             text: 'Ready',
@@ -309,7 +309,7 @@ module.exports = {
       } else {
         sendMessages([
           createTextMessage(sender, resMsg),
-          createQuestion(sender, 'Press to move to the next round.', [
+          createQuestion(sender, 'Press to move to the next round!', [
             {
               text: 'Continue',
               payload: actions.createPayload(actions.CONTINUE_GAME, gameID),
