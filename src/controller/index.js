@@ -235,11 +235,13 @@ module.exports = {
 
   handleTellerDirections: async((sender, payload) => {
     const gameID = actions.getPayloadId(payload);
+    const round = asyncAwait(db.getRound(sender, gameID));
     const answer = Math.random() > 0.5;
     const msg = answer ? 'Tell the truth.' : 'Tell a lie';
     asyncAwait(db.setAnswer(sender, gameID, answer));
 
-    sendMessage(
+    sendMessages([
+      createImageMessage(sender, utils.getHideGif(round)),
       createQuestion(sender, 'Press Hide to continue!', [
         {
           text: 'Hide',
@@ -250,8 +252,8 @@ module.exports = {
           text: msg,
           payload: actions.createPayload(actions.CONFIRM_ANSWER, gameID),
         },
-      ])
-    );
+      ]),
+    ]);
   }),
 
   handleChoiceSet: async((sender, payload) => {

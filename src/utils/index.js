@@ -1,7 +1,14 @@
 const appUrl = 'https://hot-seat.herokuapp.com/';
 const imgDir = 'img';
 
+const createImageUrl = image => `${appUrl}/${imgDir}/${image}`;
+
 module.exports = {
-  createImageUrl: image => `${appUrl}/${imgDir}/${image}`,
+  createImageUrl,
   getTellerIndex: (round, playerCount) => round % playerCount,
+  getHideGif: round => {
+    const gifCount = 7;
+    const next = round % gifCount;
+    return createImageUrl(`hush${next}.gif`);
+  },
 };
