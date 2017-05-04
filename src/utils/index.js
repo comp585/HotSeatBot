@@ -4,9 +4,9 @@ const imgDir = 'img';
 const createImageUrl = image => `${appUrl}/${imgDir}/${image}`;
 const gifCounts = {
   secret: 7,
-  truth: 7,
+  truth: 6,
   lie: 6,
-  investigate: 7,
+  investigate: 6,
 };
 
 module.exports = {
