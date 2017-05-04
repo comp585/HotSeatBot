@@ -193,7 +193,8 @@ const getTellerQuestion = (sender, id, topic) => {
       );
 
       // use index from original array
-      questionIndex = topicQuestions.indexOf(api.getRandomIndex(questions));
+      const randomFilteredQuestion = questions[api.getRandomIndex(questions)];
+      questionIndex = topicQuestions.indexOf(randomFilteredQuestion);
       question = topicQuestions[questionIndex];
       return questionIndex;
     })
