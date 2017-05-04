@@ -36,6 +36,10 @@ const questions = {
     'What large festivals or gatherings have you attended?',
     'Shark diving, bungee jumping, or sky diving?',
     'Tell me about the best vacation you’ve ever taken.',
+    'What’s the most memorable thing you’ve ever lost on a trip to another country?',
+    'If you could travel the world, which are the five places you’d never miss?',
+    'What role do you play in planning group trips?',
+    'In a new city, what attraction do you have to visit first?',
   ],
   'Family & Upbringing': [
     'Who are you closest to in your family?',
@@ -52,6 +56,10 @@ const questions = {
     'What are some unusual food combinations that you think are tasty?',
     'What common food that most people enjoy makes you gag?',
     'What’s the worst thing you would do for some free guacamole',
+    'If you had $200 which you could only spend on food, what would you get?',
+    'If you had to eat one thing for the rest of your life, what would it be?',
+    'What are your biggest pet peeves when it comes to menus?',
+    'Is there anything you don’t eat?',
   ],
   Hypotheticals: [
     'Your house, containing everything you own, catches fire. After saving your loved ones and pets, you have time to safely make a final dash to save any one item. What would it be? Why?',
